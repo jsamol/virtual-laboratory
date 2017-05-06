@@ -5,6 +5,10 @@ import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.camera.Camera;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class CameraHandler implements Camera.Iface {
     private DeviceStruct deviceInfo;
 
@@ -53,6 +57,23 @@ public class CameraHandler implements Camera.Iface {
         else {
             return Status.NOT_AVAILABLE;
         }
+    }
+
+    @Override
+    public List<String> getAvailableCommands() throws TException {
+        String[] commands = {
+                "\\zoom in",
+                "\\zoom out",
+                "\\look up",
+                "\\look down",
+                "\\rotate right",
+                "\\rotate left",
+                "\\start recording",
+                "\\stop recording",
+                "\\end"
+        };
+
+        return new ArrayList<>(Arrays.asList(commands));
     }
 
     @Override
