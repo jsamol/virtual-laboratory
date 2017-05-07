@@ -62,14 +62,14 @@ public class CameraHandler implements Camera.Iface {
     @Override
     public List<String> getAvailableCommands() throws TException {
         String[] commands = {
-                "\\zoom in",
-                "\\zoom out",
-                "\\look up",
-                "\\look down",
-                "\\rotate right",
-                "\\rotate left",
-                "\\start recording",
-                "\\stop recording",
+                "\\zoom_in [value]",
+                "\\zoom_out [value]",
+                "\\look_up [angle]",
+                "\\look_down [angle]",
+                "\\rotate_right [angle]",
+                "\\rotate_left [angle]",
+                "\\start_recording",
+                "\\stop_recording",
                 "\\end"
         };
 

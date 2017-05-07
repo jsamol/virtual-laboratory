@@ -56,7 +56,7 @@ class Client(laboratory.Device.Client, Iface):
          - distance
         """
         self.send_goForwards(distance)
-        self.recv_goForwards()
+        return self.recv_goForwards()
 
     def send_goForwards(self, distance):
         self._oprot.writeMessageBegin('goForwards', TMessageType.CALL, self._seqid)
@@ -77,7 +77,9 @@ class Client(laboratory.Device.Client, Iface):
         result = goForwards_result()
         result.read(iprot)
         iprot.readMessageEnd()
-        return
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "goForwards failed: unknown result")
 
     def goBackwards(self, distance):
         """
@@ -85,7 +87,7 @@ class Client(laboratory.Device.Client, Iface):
          - distance
         """
         self.send_goBackwards(distance)
-        self.recv_goBackwards()
+        return self.recv_goBackwards()
 
     def send_goBackwards(self, distance):
         self._oprot.writeMessageBegin('goBackwards', TMessageType.CALL, self._seqid)
@@ -106,7 +108,9 @@ class Client(laboratory.Device.Client, Iface):
         result = goBackwards_result()
         result.read(iprot)
         iprot.readMessageEnd()
-        return
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "goBackwards failed: unknown result")
 
     def goRight(self, angle):
         """
@@ -114,7 +118,7 @@ class Client(laboratory.Device.Client, Iface):
          - angle
         """
         self.send_goRight(angle)
-        self.recv_goRight()
+        return self.recv_goRight()
 
     def send_goRight(self, angle):
         self._oprot.writeMessageBegin('goRight', TMessageType.CALL, self._seqid)
@@ -135,7 +139,9 @@ class Client(laboratory.Device.Client, Iface):
         result = goRight_result()
         result.read(iprot)
         iprot.readMessageEnd()
-        return
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "goRight failed: unknown result")
 
     def goLeft(self, angle):
         """
@@ -143,7 +149,7 @@ class Client(laboratory.Device.Client, Iface):
          - angle
         """
         self.send_goLeft(angle)
-        self.recv_goLeft()
+        return self.recv_goLeft()
 
     def send_goLeft(self, angle):
         self._oprot.writeMessageBegin('goLeft', TMessageType.CALL, self._seqid)
@@ -164,7 +170,9 @@ class Client(laboratory.Device.Client, Iface):
         result = goLeft_result()
         result.read(iprot)
         iprot.readMessageEnd()
-        return
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "goLeft failed: unknown result")
 
 
 class Processor(laboratory.Device.Processor, Iface, TProcessor):
@@ -196,7 +204,7 @@ class Processor(laboratory.Device.Processor, Iface, TProcessor):
         iprot.readMessageEnd()
         result = goForwards_result()
         try:
-            self._handler.goForwards(args.distance)
+            result.success = self._handler.goForwards(args.distance)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -215,7 +223,7 @@ class Processor(laboratory.Device.Processor, Iface, TProcessor):
         iprot.readMessageEnd()
         result = goBackwards_result()
         try:
-            self._handler.goBackwards(args.distance)
+            result.success = self._handler.goBackwards(args.distance)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -234,7 +242,7 @@ class Processor(laboratory.Device.Processor, Iface, TProcessor):
         iprot.readMessageEnd()
         result = goRight_result()
         try:
-            self._handler.goRight(args.angle)
+            result.success = self._handler.goRight(args.angle)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -253,7 +261,7 @@ class Processor(laboratory.Device.Processor, Iface, TProcessor):
         iprot.readMessageEnd()
         result = goLeft_result()
         try:
-            self._handler.goLeft(args.angle)
+            result.success = self._handler.goLeft(args.angle)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -330,9 +338,17 @@ class goForwards_args(object):
 
 
 class goForwards_result(object):
+    """
+    Attributes:
+     - success
+    """
 
     thrift_spec = (
+        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     )
+
+    def __init__(self, success=None,):
+        self.success = success
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -343,6 +359,11 @@ class goForwards_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -353,6 +374,10 @@ class goForwards_result(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('goForwards_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -432,9 +457,17 @@ class goBackwards_args(object):
 
 
 class goBackwards_result(object):
+    """
+    Attributes:
+     - success
+    """
 
     thrift_spec = (
+        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     )
+
+    def __init__(self, success=None,):
+        self.success = success
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -445,6 +478,11 @@ class goBackwards_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -455,6 +493,10 @@ class goBackwards_result(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('goBackwards_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -534,9 +576,17 @@ class goRight_args(object):
 
 
 class goRight_result(object):
+    """
+    Attributes:
+     - success
+    """
 
     thrift_spec = (
+        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     )
+
+    def __init__(self, success=None,):
+        self.success = success
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -547,6 +597,11 @@ class goRight_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -557,6 +612,10 @@ class goRight_result(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('goRight_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -636,9 +695,17 @@ class goLeft_args(object):
 
 
 class goLeft_result(object):
+    """
+    Attributes:
+     - success
+    """
 
     thrift_spec = (
+        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     )
+
+    def __init__(self, success=None,):
+        self.success = success
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -649,6 +716,11 @@ class goLeft_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -659,6 +731,10 @@ class goLeft_result(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('goLeft_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 

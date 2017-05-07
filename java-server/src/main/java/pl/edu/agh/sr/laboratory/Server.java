@@ -9,11 +9,16 @@ import org.apache.thrift.server.TSimpleServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
-import pl.edu.agh.sr.laboratory.handler.CameraHandler;
-import pl.edu.agh.sr.laboratory.handler.InfoHandler;
+import pl.edu.agh.sr.laboratory.handler.*;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Info;
+import pl.edu.agh.sr.rpc.laboratory.camera.AdvancedCamera;
 import pl.edu.agh.sr.rpc.laboratory.camera.Camera;
+import pl.edu.agh.sr.rpc.laboratory.roboticarm.PreciseRoboticArm;
+import pl.edu.agh.sr.rpc.laboratory.roboticarm.RoboticArm;
+import pl.edu.agh.sr.rpc.laboratory.roboticplatform.AdvancedMobileRoboticPlatform;
+import pl.edu.agh.sr.rpc.laboratory.roboticplatform.MobileRoboticPlatform;
+import pl.edu.agh.sr.rpc.laboratory.telescope.Telescope;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +64,8 @@ public class Server {
 
         System.out.println("Server running...");
         server.serve();
+
+        // TODO: monitoring, complete handlers
     }
 
     public static void main(String[] args) {
@@ -79,27 +86,50 @@ public class Server {
         }
 
         for (int i = 0; i < numbers.get("acameras"); i++) {
-
+            AdvancedCameraHandler advancedCameraHandler = new AdvancedCameraHandler(i);
+            devices.add(advancedCameraHandler.getDeviceInfo());
+            String name = "Advanced Camera #" + i;
+            multiplexedProcessor.registerProcessor(name, new AdvancedCamera.Processor<>(advancedCameraHandler));
         }
 
         for (int i = 0; i < numbers.get("platforms"); i++) {
-
+            MobileRoboticPlatformHandler mobileRoboticPlatformHandler = new MobileRoboticPlatformHandler(i);
+            devices.add(mobileRoboticPlatformHandler.getDeviceInfo());
+            String name = "Mobile Robotic Platform #" + i;
+            multiplexedProcessor
+                    .registerProcessor(name, new MobileRoboticPlatform.Processor<>(mobileRoboticPlatformHandler));
         }
 
         for (int i = 0; i < numbers.get("aplatforms"); i++) {
-
+            AdvancedMobileRoboticPlatformHandler advancedMobileRoboticPlatformHandler =
+                    new AdvancedMobileRoboticPlatformHandler(i);
+            devices.add(advancedMobileRoboticPlatformHandler.getDeviceInfo());
+            String name = "Advanced Mobile Robotic Platform #" + i;
+            multiplexedProcessor.registerProcessor(
+                    name,
+                    new AdvancedMobileRoboticPlatform.Processor<>(advancedMobileRoboticPlatformHandler)
+            );
         }
 
         for (int i = 0; i < numbers.get("arms"); i++) {
-
+            RoboticArmHandler roboticArmHandler = new RoboticArmHandler(i);
+            devices.add(roboticArmHandler.getDeviceInfo());
+            String name = "Robotic Arm #" + i;
+            multiplexedProcessor.registerProcessor(name, new RoboticArm.Processor<>(roboticArmHandler));
         }
 
         for (int i = 0; i < numbers.get("parms"); i++) {
-
+            PreciseRoboticArmHandler preciseRoboticArmHandler = new PreciseRoboticArmHandler(i);
+            devices.add(preciseRoboticArmHandler.getDeviceInfo());
+            String name = "Precise Robotic Arm #" + i;
+            multiplexedProcessor.registerProcessor(name, new PreciseRoboticArm.Processor<>(preciseRoboticArmHandler));
         }
 
         for (int i = 0; i < numbers.get("telescopes"); i++) {
-
+            TelescopeHandler telescopeHandler = new TelescopeHandler(i);
+            devices.add(telescopeHandler.getDeviceInfo());
+            String name = "Telescope #" + i;
+            multiplexedProcessor.registerProcessor(name, new Telescope.Processor<>(telescopeHandler));
         }
     }
 

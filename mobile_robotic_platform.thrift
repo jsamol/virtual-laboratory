@@ -18,12 +18,12 @@ struct OrderStruct {
 }
 
 service MobileRoboticPlatform extends virtual_laboratory.Device {
-    void goForwards(1:i32 distance);
-    void goBackwards(1:i32 distance);
-    void goRight(1:i32 angle);
-    void goLeft(1:i32 angle);
+    string goForwards(1:i32 distance);
+    string goBackwards(1:i32 distance);
+    string goRight(1:i32 angle);
+    string goLeft(1:i32 angle);
 }
 
 service AdvancedMobileRoboticPlatform extends MobileRoboticPlatform {
-    void doSequenceOfMovements(1:list<OrderStruct> orders) throws (1:virtual_laboratory.InvalidOperationException e);
+    string doSequenceOfMovements(1:list<OrderStruct> orders) throws (1:virtual_laboratory.InvalidOperationException e);
 }

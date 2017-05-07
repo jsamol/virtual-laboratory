@@ -12,13 +12,13 @@ public class AdvancedMobileRoboticPlatform {
 
   public interface Iface extends MobileRoboticPlatform.Iface {
 
-    public void doSequenceOfMovements(java.util.List<OrderStruct> orders) throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException;
+    public java.lang.String doSequenceOfMovements(java.util.List<OrderStruct> orders) throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface extends MobileRoboticPlatform .AsyncIface {
 
-    public void doSequenceOfMovements(java.util.List<OrderStruct> orders, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void doSequenceOfMovements(java.util.List<OrderStruct> orders, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -42,10 +42,10 @@ public class AdvancedMobileRoboticPlatform {
       super(iprot, oprot);
     }
 
-    public void doSequenceOfMovements(java.util.List<OrderStruct> orders) throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException
+    public java.lang.String doSequenceOfMovements(java.util.List<OrderStruct> orders) throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException
     {
       send_doSequenceOfMovements(orders);
-      recv_doSequenceOfMovements();
+      return recv_doSequenceOfMovements();
     }
 
     public void send_doSequenceOfMovements(java.util.List<OrderStruct> orders) throws org.apache.thrift.TException
@@ -55,14 +55,17 @@ public class AdvancedMobileRoboticPlatform {
       sendBase("doSequenceOfMovements", args);
     }
 
-    public void recv_doSequenceOfMovements() throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException
+    public java.lang.String recv_doSequenceOfMovements() throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException
     {
       doSequenceOfMovements_result result = new doSequenceOfMovements_result();
       receiveBase(result, "doSequenceOfMovements");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
       if (result.e != null) {
         throw result.e;
       }
-      return;
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "doSequenceOfMovements failed: unknown result");
     }
 
   }
@@ -83,16 +86,16 @@ public class AdvancedMobileRoboticPlatform {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void doSequenceOfMovements(java.util.List<OrderStruct> orders, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void doSequenceOfMovements(java.util.List<OrderStruct> orders, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       doSequenceOfMovements_call method_call = new doSequenceOfMovements_call(orders, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class doSequenceOfMovements_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class doSequenceOfMovements_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.String> {
       private java.util.List<OrderStruct> orders;
-      public doSequenceOfMovements_call(java.util.List<OrderStruct> orders, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public doSequenceOfMovements_call(java.util.List<OrderStruct> orders, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.orders = orders;
       }
@@ -105,13 +108,13 @@ public class AdvancedMobileRoboticPlatform {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException {
+      public java.lang.String getResult() throws pl.edu.agh.sr.rpc.laboratory.InvalidOperationException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
+        return (new Client(prot)).recv_doSequenceOfMovements();
       }
     }
 
@@ -148,7 +151,7 @@ public class AdvancedMobileRoboticPlatform {
       public doSequenceOfMovements_result getResult(I iface, doSequenceOfMovements_args args) throws org.apache.thrift.TException {
         doSequenceOfMovements_result result = new doSequenceOfMovements_result();
         try {
-          iface.doSequenceOfMovements(args.orders);
+          result.success = iface.doSequenceOfMovements(args.orders);
         } catch (pl.edu.agh.sr.rpc.laboratory.InvalidOperationException e) {
           result.e = e;
         }
@@ -173,7 +176,7 @@ public class AdvancedMobileRoboticPlatform {
       return processMap;
     }
 
-    public static class doSequenceOfMovements<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, doSequenceOfMovements_args, Void> {
+    public static class doSequenceOfMovements<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, doSequenceOfMovements_args, java.lang.String> {
       public doSequenceOfMovements() {
         super("doSequenceOfMovements");
       }
@@ -182,11 +185,12 @@ public class AdvancedMobileRoboticPlatform {
         return new doSequenceOfMovements_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.String> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.String>() { 
+          public void onComplete(java.lang.String o) {
             doSequenceOfMovements_result result = new doSequenceOfMovements_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -232,7 +236,7 @@ public class AdvancedMobileRoboticPlatform {
         return false;
       }
 
-      public void start(I iface, doSequenceOfMovements_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, doSequenceOfMovements_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
         iface.doSequenceOfMovements(args.orders,resultHandler);
       }
     }
@@ -658,15 +662,18 @@ public class AdvancedMobileRoboticPlatform {
   public static class doSequenceOfMovements_result implements org.apache.thrift.TBase<doSequenceOfMovements_result, doSequenceOfMovements_result._Fields>, java.io.Serializable, Cloneable, Comparable<doSequenceOfMovements_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("doSequenceOfMovements_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
     private static final org.apache.thrift.protocol.TField E_FIELD_DESC = new org.apache.thrift.protocol.TField("e", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new doSequenceOfMovements_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new doSequenceOfMovements_resultTupleSchemeFactory();
 
+    public java.lang.String success; // required
     public pl.edu.agh.sr.rpc.laboratory.InvalidOperationException e; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
       E((short)1, "e");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
@@ -682,6 +689,8 @@ public class AdvancedMobileRoboticPlatform {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           case 1: // E
             return E;
           default:
@@ -727,6 +736,8 @@ public class AdvancedMobileRoboticPlatform {
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       tmpMap.put(_Fields.E, new org.apache.thrift.meta_data.FieldMetaData("e", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, pl.edu.agh.sr.rpc.laboratory.InvalidOperationException.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
@@ -737,9 +748,11 @@ public class AdvancedMobileRoboticPlatform {
     }
 
     public doSequenceOfMovements_result(
+      java.lang.String success,
       pl.edu.agh.sr.rpc.laboratory.InvalidOperationException e)
     {
       this();
+      this.success = success;
       this.e = e;
     }
 
@@ -747,6 +760,9 @@ public class AdvancedMobileRoboticPlatform {
      * Performs a deep copy on <i>other</i>.
      */
     public doSequenceOfMovements_result(doSequenceOfMovements_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
       if (other.isSetE()) {
         this.e = new pl.edu.agh.sr.rpc.laboratory.InvalidOperationException(other.e);
       }
@@ -758,7 +774,32 @@ public class AdvancedMobileRoboticPlatform {
 
     @Override
     public void clear() {
+      this.success = null;
       this.e = null;
+    }
+
+    public java.lang.String getSuccess() {
+      return this.success;
+    }
+
+    public doSequenceOfMovements_result setSuccess(java.lang.String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public pl.edu.agh.sr.rpc.laboratory.InvalidOperationException getE() {
@@ -787,6 +828,14 @@ public class AdvancedMobileRoboticPlatform {
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.String)value);
+        }
+        break;
+
       case E:
         if (value == null) {
           unsetE();
@@ -800,6 +849,9 @@ public class AdvancedMobileRoboticPlatform {
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       case E:
         return getE();
 
@@ -814,6 +866,8 @@ public class AdvancedMobileRoboticPlatform {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       case E:
         return isSetE();
       }
@@ -835,6 +889,15 @@ public class AdvancedMobileRoboticPlatform {
       if (this == that)
         return true;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       boolean this_present_e = true && this.isSetE();
       boolean that_present_e = true && that.isSetE();
       if (this_present_e || that_present_e) {
@@ -851,6 +914,10 @@ public class AdvancedMobileRoboticPlatform {
     public int hashCode() {
       int hashCode = 1;
 
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
+
       hashCode = hashCode * 8191 + ((isSetE()) ? 131071 : 524287);
       if (isSetE())
         hashCode = hashCode * 8191 + e.hashCode();
@@ -866,6 +933,16 @@ public class AdvancedMobileRoboticPlatform {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       lastComparison = java.lang.Boolean.valueOf(isSetE()).compareTo(other.isSetE());
       if (lastComparison != 0) {
         return lastComparison;
@@ -896,6 +973,14 @@ public class AdvancedMobileRoboticPlatform {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("doSequenceOfMovements_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("e:");
       if (this.e == null) {
         sb.append("null");
@@ -946,6 +1031,14 @@ public class AdvancedMobileRoboticPlatform {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             case 1: // E
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
                 struct.e = new pl.edu.agh.sr.rpc.laboratory.InvalidOperationException();
@@ -970,6 +1063,11 @@ public class AdvancedMobileRoboticPlatform {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         if (struct.e != null) {
           oprot.writeFieldBegin(E_FIELD_DESC);
           struct.e.write(oprot);
@@ -993,10 +1091,16 @@ public class AdvancedMobileRoboticPlatform {
       public void write(org.apache.thrift.protocol.TProtocol prot, doSequenceOfMovements_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet optionals = new java.util.BitSet();
-        if (struct.isSetE()) {
+        if (struct.isSetSuccess()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetE()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
         if (struct.isSetE()) {
           struct.e.write(oprot);
         }
@@ -1005,8 +1109,12 @@ public class AdvancedMobileRoboticPlatform {
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, doSequenceOfMovements_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-        java.util.BitSet incoming = iprot.readBitSet(1);
+        java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
           struct.e = new pl.edu.agh.sr.rpc.laboratory.InvalidOperationException();
           struct.e.read(iprot);
           struct.setEIsSet(true);

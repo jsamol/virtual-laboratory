@@ -12,25 +12,25 @@ public class MobileRoboticPlatform {
 
   public interface Iface extends pl.edu.agh.sr.rpc.laboratory.Device.Iface {
 
-    public void goForwards(int distance) throws org.apache.thrift.TException;
+    public java.lang.String goForwards(int distance) throws org.apache.thrift.TException;
 
-    public void goBackwards(int distance) throws org.apache.thrift.TException;
+    public java.lang.String goBackwards(int distance) throws org.apache.thrift.TException;
 
-    public void goRight(int angle) throws org.apache.thrift.TException;
+    public java.lang.String goRight(int angle) throws org.apache.thrift.TException;
 
-    public void goLeft(int angle) throws org.apache.thrift.TException;
+    public java.lang.String goLeft(int angle) throws org.apache.thrift.TException;
 
   }
 
   public interface AsyncIface extends pl.edu.agh.sr.rpc.laboratory.Device .AsyncIface {
 
-    public void goForwards(int distance, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void goForwards(int distance, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
-    public void goBackwards(int distance, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void goBackwards(int distance, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
-    public void goRight(int angle, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void goRight(int angle, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
-    public void goLeft(int angle, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void goLeft(int angle, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -54,10 +54,10 @@ public class MobileRoboticPlatform {
       super(iprot, oprot);
     }
 
-    public void goForwards(int distance) throws org.apache.thrift.TException
+    public java.lang.String goForwards(int distance) throws org.apache.thrift.TException
     {
       send_goForwards(distance);
-      recv_goForwards();
+      return recv_goForwards();
     }
 
     public void send_goForwards(int distance) throws org.apache.thrift.TException
@@ -67,17 +67,20 @@ public class MobileRoboticPlatform {
       sendBase("goForwards", args);
     }
 
-    public void recv_goForwards() throws org.apache.thrift.TException
+    public java.lang.String recv_goForwards() throws org.apache.thrift.TException
     {
       goForwards_result result = new goForwards_result();
       receiveBase(result, "goForwards");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "goForwards failed: unknown result");
     }
 
-    public void goBackwards(int distance) throws org.apache.thrift.TException
+    public java.lang.String goBackwards(int distance) throws org.apache.thrift.TException
     {
       send_goBackwards(distance);
-      recv_goBackwards();
+      return recv_goBackwards();
     }
 
     public void send_goBackwards(int distance) throws org.apache.thrift.TException
@@ -87,17 +90,20 @@ public class MobileRoboticPlatform {
       sendBase("goBackwards", args);
     }
 
-    public void recv_goBackwards() throws org.apache.thrift.TException
+    public java.lang.String recv_goBackwards() throws org.apache.thrift.TException
     {
       goBackwards_result result = new goBackwards_result();
       receiveBase(result, "goBackwards");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "goBackwards failed: unknown result");
     }
 
-    public void goRight(int angle) throws org.apache.thrift.TException
+    public java.lang.String goRight(int angle) throws org.apache.thrift.TException
     {
       send_goRight(angle);
-      recv_goRight();
+      return recv_goRight();
     }
 
     public void send_goRight(int angle) throws org.apache.thrift.TException
@@ -107,17 +113,20 @@ public class MobileRoboticPlatform {
       sendBase("goRight", args);
     }
 
-    public void recv_goRight() throws org.apache.thrift.TException
+    public java.lang.String recv_goRight() throws org.apache.thrift.TException
     {
       goRight_result result = new goRight_result();
       receiveBase(result, "goRight");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "goRight failed: unknown result");
     }
 
-    public void goLeft(int angle) throws org.apache.thrift.TException
+    public java.lang.String goLeft(int angle) throws org.apache.thrift.TException
     {
       send_goLeft(angle);
-      recv_goLeft();
+      return recv_goLeft();
     }
 
     public void send_goLeft(int angle) throws org.apache.thrift.TException
@@ -127,11 +136,14 @@ public class MobileRoboticPlatform {
       sendBase("goLeft", args);
     }
 
-    public void recv_goLeft() throws org.apache.thrift.TException
+    public java.lang.String recv_goLeft() throws org.apache.thrift.TException
     {
       goLeft_result result = new goLeft_result();
       receiveBase(result, "goLeft");
-      return;
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "goLeft failed: unknown result");
     }
 
   }
@@ -152,16 +164,16 @@ public class MobileRoboticPlatform {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void goForwards(int distance, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void goForwards(int distance, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       goForwards_call method_call = new goForwards_call(distance, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class goForwards_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class goForwards_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.String> {
       private int distance;
-      public goForwards_call(int distance, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public goForwards_call(int distance, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.distance = distance;
       }
@@ -174,26 +186,26 @@ public class MobileRoboticPlatform {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.apache.thrift.TException {
+      public java.lang.String getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
+        return (new Client(prot)).recv_goForwards();
       }
     }
 
-    public void goBackwards(int distance, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void goBackwards(int distance, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       goBackwards_call method_call = new goBackwards_call(distance, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class goBackwards_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class goBackwards_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.String> {
       private int distance;
-      public goBackwards_call(int distance, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public goBackwards_call(int distance, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.distance = distance;
       }
@@ -206,26 +218,26 @@ public class MobileRoboticPlatform {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.apache.thrift.TException {
+      public java.lang.String getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
+        return (new Client(prot)).recv_goBackwards();
       }
     }
 
-    public void goRight(int angle, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void goRight(int angle, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       goRight_call method_call = new goRight_call(angle, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class goRight_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class goRight_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.String> {
       private int angle;
-      public goRight_call(int angle, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public goRight_call(int angle, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.angle = angle;
       }
@@ -238,26 +250,26 @@ public class MobileRoboticPlatform {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.apache.thrift.TException {
+      public java.lang.String getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
+        return (new Client(prot)).recv_goRight();
       }
     }
 
-    public void goLeft(int angle, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void goLeft(int angle, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       goLeft_call method_call = new goLeft_call(angle, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class goLeft_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
+    public static class goLeft_call extends org.apache.thrift.async.TAsyncMethodCall<java.lang.String> {
       private int angle;
-      public goLeft_call(int angle, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public goLeft_call(int angle, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.angle = angle;
       }
@@ -270,13 +282,13 @@ public class MobileRoboticPlatform {
         prot.writeMessageEnd();
       }
 
-      public Void getResult() throws org.apache.thrift.TException {
+      public java.lang.String getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return null;
+        return (new Client(prot)).recv_goLeft();
       }
     }
 
@@ -315,7 +327,7 @@ public class MobileRoboticPlatform {
 
       public goForwards_result getResult(I iface, goForwards_args args) throws org.apache.thrift.TException {
         goForwards_result result = new goForwards_result();
-        iface.goForwards(args.distance);
+        result.success = iface.goForwards(args.distance);
         return result;
       }
     }
@@ -335,7 +347,7 @@ public class MobileRoboticPlatform {
 
       public goBackwards_result getResult(I iface, goBackwards_args args) throws org.apache.thrift.TException {
         goBackwards_result result = new goBackwards_result();
-        iface.goBackwards(args.distance);
+        result.success = iface.goBackwards(args.distance);
         return result;
       }
     }
@@ -355,7 +367,7 @@ public class MobileRoboticPlatform {
 
       public goRight_result getResult(I iface, goRight_args args) throws org.apache.thrift.TException {
         goRight_result result = new goRight_result();
-        iface.goRight(args.angle);
+        result.success = iface.goRight(args.angle);
         return result;
       }
     }
@@ -375,7 +387,7 @@ public class MobileRoboticPlatform {
 
       public goLeft_result getResult(I iface, goLeft_args args) throws org.apache.thrift.TException {
         goLeft_result result = new goLeft_result();
-        iface.goLeft(args.angle);
+        result.success = iface.goLeft(args.angle);
         return result;
       }
     }
@@ -400,7 +412,7 @@ public class MobileRoboticPlatform {
       return processMap;
     }
 
-    public static class goForwards<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goForwards_args, Void> {
+    public static class goForwards<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goForwards_args, java.lang.String> {
       public goForwards() {
         super("goForwards");
       }
@@ -409,11 +421,12 @@ public class MobileRoboticPlatform {
         return new goForwards_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.String> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.String>() { 
+          public void onComplete(java.lang.String o) {
             goForwards_result result = new goForwards_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -455,12 +468,12 @@ public class MobileRoboticPlatform {
         return false;
       }
 
-      public void start(I iface, goForwards_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, goForwards_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
         iface.goForwards(args.distance,resultHandler);
       }
     }
 
-    public static class goBackwards<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goBackwards_args, Void> {
+    public static class goBackwards<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goBackwards_args, java.lang.String> {
       public goBackwards() {
         super("goBackwards");
       }
@@ -469,11 +482,12 @@ public class MobileRoboticPlatform {
         return new goBackwards_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.String> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.String>() { 
+          public void onComplete(java.lang.String o) {
             goBackwards_result result = new goBackwards_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -515,12 +529,12 @@ public class MobileRoboticPlatform {
         return false;
       }
 
-      public void start(I iface, goBackwards_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, goBackwards_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
         iface.goBackwards(args.distance,resultHandler);
       }
     }
 
-    public static class goRight<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goRight_args, Void> {
+    public static class goRight<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goRight_args, java.lang.String> {
       public goRight() {
         super("goRight");
       }
@@ -529,11 +543,12 @@ public class MobileRoboticPlatform {
         return new goRight_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.String> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.String>() { 
+          public void onComplete(java.lang.String o) {
             goRight_result result = new goRight_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -575,12 +590,12 @@ public class MobileRoboticPlatform {
         return false;
       }
 
-      public void start(I iface, goRight_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, goRight_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
         iface.goRight(args.angle,resultHandler);
       }
     }
 
-    public static class goLeft<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goLeft_args, Void> {
+    public static class goLeft<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, goLeft_args, java.lang.String> {
       public goLeft() {
         super("goLeft");
       }
@@ -589,11 +604,12 @@ public class MobileRoboticPlatform {
         return new goLeft_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<Void> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<java.lang.String> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
-          public void onComplete(Void o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<java.lang.String>() { 
+          public void onComplete(java.lang.String o) {
             goLeft_result result = new goLeft_result();
+            result.success = o;
             try {
               fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
             } catch (org.apache.thrift.transport.TTransportException e) {
@@ -635,7 +651,7 @@ public class MobileRoboticPlatform {
         return false;
       }
 
-      public void start(I iface, goLeft_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, goLeft_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
         iface.goLeft(args.angle,resultHandler);
       }
     }
@@ -1003,14 +1019,16 @@ public class MobileRoboticPlatform {
   public static class goForwards_result implements org.apache.thrift.TBase<goForwards_result, goForwards_result._Fields>, java.io.Serializable, Cloneable, Comparable<goForwards_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("goForwards_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new goForwards_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new goForwards_resultTupleSchemeFactory();
 
+    public java.lang.String success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1025,6 +1043,8 @@ public class MobileRoboticPlatform {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -1063,9 +1083,13 @@ public class MobileRoboticPlatform {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(goForwards_result.class, metaDataMap);
     }
@@ -1073,10 +1097,20 @@ public class MobileRoboticPlatform {
     public goForwards_result() {
     }
 
+    public goForwards_result(
+      java.lang.String success)
+    {
+      this();
+      this.success = success;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public goForwards_result(goForwards_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
     }
 
     public goForwards_result deepCopy() {
@@ -1085,15 +1119,51 @@ public class MobileRoboticPlatform {
 
     @Override
     public void clear() {
+      this.success = null;
+    }
+
+    public java.lang.String getSuccess() {
+      return this.success;
+    }
+
+    public goForwards_result setSuccess(java.lang.String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.String)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1105,6 +1175,8 @@ public class MobileRoboticPlatform {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1124,12 +1196,25 @@ public class MobileRoboticPlatform {
       if (this == that)
         return true;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
 
       return hashCode;
     }
@@ -1142,6 +1227,16 @@ public class MobileRoboticPlatform {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -1162,6 +1257,13 @@ public class MobileRoboticPlatform {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("goForwards_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1205,6 +1307,14 @@ public class MobileRoboticPlatform {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1220,6 +1330,11 @@ public class MobileRoboticPlatform {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1237,11 +1352,24 @@ public class MobileRoboticPlatform {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, goForwards_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, goForwards_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
@@ -1611,14 +1739,16 @@ public class MobileRoboticPlatform {
   public static class goBackwards_result implements org.apache.thrift.TBase<goBackwards_result, goBackwards_result._Fields>, java.io.Serializable, Cloneable, Comparable<goBackwards_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("goBackwards_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new goBackwards_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new goBackwards_resultTupleSchemeFactory();
 
+    public java.lang.String success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -1633,6 +1763,8 @@ public class MobileRoboticPlatform {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -1671,9 +1803,13 @@ public class MobileRoboticPlatform {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(goBackwards_result.class, metaDataMap);
     }
@@ -1681,10 +1817,20 @@ public class MobileRoboticPlatform {
     public goBackwards_result() {
     }
 
+    public goBackwards_result(
+      java.lang.String success)
+    {
+      this();
+      this.success = success;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public goBackwards_result(goBackwards_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
     }
 
     public goBackwards_result deepCopy() {
@@ -1693,15 +1839,51 @@ public class MobileRoboticPlatform {
 
     @Override
     public void clear() {
+      this.success = null;
+    }
+
+    public java.lang.String getSuccess() {
+      return this.success;
+    }
+
+    public goBackwards_result setSuccess(java.lang.String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.String)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1713,6 +1895,8 @@ public class MobileRoboticPlatform {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -1732,12 +1916,25 @@ public class MobileRoboticPlatform {
       if (this == that)
         return true;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
 
       return hashCode;
     }
@@ -1750,6 +1947,16 @@ public class MobileRoboticPlatform {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -1770,6 +1977,13 @@ public class MobileRoboticPlatform {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("goBackwards_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -1813,6 +2027,14 @@ public class MobileRoboticPlatform {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -1828,6 +2050,11 @@ public class MobileRoboticPlatform {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1845,11 +2072,24 @@ public class MobileRoboticPlatform {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, goBackwards_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, goBackwards_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
@@ -2219,14 +2459,16 @@ public class MobileRoboticPlatform {
   public static class goRight_result implements org.apache.thrift.TBase<goRight_result, goRight_result._Fields>, java.io.Serializable, Cloneable, Comparable<goRight_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("goRight_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new goRight_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new goRight_resultTupleSchemeFactory();
 
+    public java.lang.String success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2241,6 +2483,8 @@ public class MobileRoboticPlatform {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -2279,9 +2523,13 @@ public class MobileRoboticPlatform {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(goRight_result.class, metaDataMap);
     }
@@ -2289,10 +2537,20 @@ public class MobileRoboticPlatform {
     public goRight_result() {
     }
 
+    public goRight_result(
+      java.lang.String success)
+    {
+      this();
+      this.success = success;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public goRight_result(goRight_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
     }
 
     public goRight_result deepCopy() {
@@ -2301,15 +2559,51 @@ public class MobileRoboticPlatform {
 
     @Override
     public void clear() {
+      this.success = null;
+    }
+
+    public java.lang.String getSuccess() {
+      return this.success;
+    }
+
+    public goRight_result setSuccess(java.lang.String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.String)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2321,6 +2615,8 @@ public class MobileRoboticPlatform {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2340,12 +2636,25 @@ public class MobileRoboticPlatform {
       if (this == that)
         return true;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
 
       return hashCode;
     }
@@ -2358,6 +2667,16 @@ public class MobileRoboticPlatform {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -2378,6 +2697,13 @@ public class MobileRoboticPlatform {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("goRight_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -2421,6 +2747,14 @@ public class MobileRoboticPlatform {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -2436,6 +2770,11 @@ public class MobileRoboticPlatform {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -2453,11 +2792,24 @@ public class MobileRoboticPlatform {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, goRight_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, goRight_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 
@@ -2827,14 +3179,16 @@ public class MobileRoboticPlatform {
   public static class goLeft_result implements org.apache.thrift.TBase<goLeft_result, goLeft_result._Fields>, java.io.Serializable, Cloneable, Comparable<goLeft_result>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("goLeft_result");
 
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new goLeft_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new goLeft_resultTupleSchemeFactory();
 
+    public java.lang.String success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      SUCCESS((short)0, "success");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -2849,6 +3203,8 @@ public class MobileRoboticPlatform {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
           default:
             return null;
         }
@@ -2887,9 +3243,13 @@ public class MobileRoboticPlatform {
         return _fieldName;
       }
     }
+
+    // isset id assignments
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(goLeft_result.class, metaDataMap);
     }
@@ -2897,10 +3257,20 @@ public class MobileRoboticPlatform {
     public goLeft_result() {
     }
 
+    public goLeft_result(
+      java.lang.String success)
+    {
+      this();
+      this.success = success;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public goLeft_result(goLeft_result other) {
+      if (other.isSetSuccess()) {
+        this.success = other.success;
+      }
     }
 
     public goLeft_result deepCopy() {
@@ -2909,15 +3279,51 @@ public class MobileRoboticPlatform {
 
     @Override
     public void clear() {
+      this.success = null;
+    }
+
+    public java.lang.String getSuccess() {
+      return this.success;
+    }
+
+    public goLeft_result setSuccess(java.lang.String success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.lang.String)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2929,6 +3335,8 @@ public class MobileRoboticPlatform {
       }
 
       switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -2948,12 +3356,25 @@ public class MobileRoboticPlatform {
       if (this == that)
         return true;
 
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
 
       return hashCode;
     }
@@ -2966,6 +3387,16 @@ public class MobileRoboticPlatform {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -2986,6 +3417,13 @@ public class MobileRoboticPlatform {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("goLeft_result(");
       boolean first = true;
 
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3029,6 +3467,14 @@ public class MobileRoboticPlatform {
             break;
           }
           switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.success = iprot.readString();
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3044,6 +3490,11 @@ public class MobileRoboticPlatform {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          oprot.writeString(struct.success);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3061,11 +3512,24 @@ public class MobileRoboticPlatform {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, goLeft_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          oprot.writeString(struct.success);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, goLeft_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
       }
     }
 

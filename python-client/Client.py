@@ -68,13 +68,43 @@ def main():
 def use_device(name, device):
     commands = device.getAvailableCommands()
     print("Available commands:")
+    _commands = []
     for command in commands:
         print("- " + command)
-    command = input(name + "$ ")
-    if command not in commands:
-        print("Invalid command!")
-    elif command == "\\end":
-        print(device.releaseControl())
+        _commands.append(command.split(" [", 1)[0])
+
+    while True:
+        command = input(name + "$ ")
+        if command.find(" ") != -1:
+            _command = command.split(" ", 1)
+            arg = _command[1]
+            if arg.find(" ") != -1:
+                _arg = arg.split(" ", 1)
+                arg1 = _arg[0]
+                arg2 = _arg[1]
+            command = _command[0]
+        # TODO: commands
+        if command not in _commands:
+            print("Invalid command!")
+        elif command == "\\end":
+            print(device.releaseControl())
+            return
+        elif command == "\\adjust":
+            print(device.adjust())
+        elif command == "\\look_down":
+            print(device.lookDown(arg))
+        elif command == "\\look_up":
+            print(device.lookUp(arg))
+        elif command == "\\rotate_left":
+            print(device.rotateLeft(arg))
+        elif command == "\\rotate_right":
+            print(device.rotateRight(arg))
+        elif command == "\\take_photo":
+            print(device.takePhoto())
+        elif command == "\\zoom_in":
+            print(device.zoomIn(arg))
+        elif command == "\\zoom_out":
+            print(device.zoomOut(arg))
 
 
 def initialize_clients(protocol, numbers):

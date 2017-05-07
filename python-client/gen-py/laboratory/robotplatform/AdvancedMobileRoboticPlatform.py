@@ -35,7 +35,7 @@ class Client(laboratory.robotplatform.MobileRoboticPlatform.Client, Iface):
          - orders
         """
         self.send_doSequenceOfMovements(orders)
-        self.recv_doSequenceOfMovements()
+        return self.recv_doSequenceOfMovements()
 
     def send_doSequenceOfMovements(self, orders):
         self._oprot.writeMessageBegin('doSequenceOfMovements', TMessageType.CALL, self._seqid)
@@ -56,9 +56,11 @@ class Client(laboratory.robotplatform.MobileRoboticPlatform.Client, Iface):
         result = doSequenceOfMovements_result()
         result.read(iprot)
         iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
         if result.e is not None:
             raise result.e
-        return
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "doSequenceOfMovements failed: unknown result")
 
 
 class Processor(laboratory.robotplatform.MobileRoboticPlatform.Processor, Iface, TProcessor):
@@ -87,7 +89,7 @@ class Processor(laboratory.robotplatform.MobileRoboticPlatform.Processor, Iface,
         iprot.readMessageEnd()
         result = doSequenceOfMovements_result()
         try:
-            self._handler.doSequenceOfMovements(args.orders)
+            result.success = self._handler.doSequenceOfMovements(args.orders)
             msg_type = TMessageType.REPLY
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
@@ -178,15 +180,17 @@ class doSequenceOfMovements_args(object):
 class doSequenceOfMovements_result(object):
     """
     Attributes:
+     - success
      - e
     """
 
     thrift_spec = (
-        None,  # 0
+        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
         (1, TType.STRUCT, 'e', (laboratory.ttypes.InvalidOperationException, laboratory.ttypes.InvalidOperationException.thrift_spec), None, ),  # 1
     )
 
-    def __init__(self, e=None,):
+    def __init__(self, success=None, e=None,):
+        self.success = success
         self.e = e
 
     def read(self, iprot):
@@ -198,7 +202,12 @@ class doSequenceOfMovements_result(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
-            if fid == 1:
+            if fid == 0:
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 1:
                 if ftype == TType.STRUCT:
                     self.e = laboratory.ttypes.InvalidOperationException()
                     self.e.read(iprot)
@@ -214,6 +223,10 @@ class doSequenceOfMovements_result(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('doSequenceOfMovements_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldEnd()
         if self.e is not None:
             oprot.writeFieldBegin('e', TType.STRUCT, 1)
             self.e.write(oprot)
