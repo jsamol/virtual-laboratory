@@ -3,6 +3,7 @@ package pl.edu.agh.sr.laboratory.handler;
 import org.apache.thrift.TException;
 import pl.edu.agh.sr.laboratory.ClientNotifier;
 import pl.edu.agh.sr.laboratory.Server;
+import pl.edu.agh.sr.rpc.laboratory.DeviceInUseException;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.InvalidOperationException;
 import pl.edu.agh.sr.rpc.laboratory.Status;
@@ -43,17 +44,6 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
     }
 
     @Override
-    public Status getStatus() throws TException {
-        System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": getStatus()");
-        if (isAvailable) {
-            return Status.AVAILABLE;
-        }
-        else {
-            return Status.NOT_AVAILABLE;
-        }
-    }
-
-    @Override
     public List<String> getAvailableCommands() throws TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": getAvailableCom()");
         String[] commands = {
@@ -71,7 +61,16 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
     @Override
     public String acquireControl() throws TException {
         System.out.println("Precise Robotic Arm#" + deviceInfo.getId() + ": acquireControl()");
-        isAvailable = false;
+        synchronized (this) {
+            if (isAvailable) {
+                isAvailable = false;
+            }
+            else {
+                DeviceInUseException e = new DeviceInUseException();
+                e.alert = "Someone else is already using Precise Robotic Arm #" + deviceInfo.getId();
+                throw e;
+            }
+        }
         String returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + " acquired.";
         for (ClientNotifier notifier : Server.getNotifiers()) {
             notifier.notify(returnMessage);

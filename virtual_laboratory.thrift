@@ -15,9 +15,8 @@ exception InvalidOperationException {
     2: string why
 }
 
-enum Status {
-    AVAILABLE = 1,
-    NOT_AVAILABLE = 2
+exception DeviceInUseException {
+    1: string alert
 }
 
 struct DeviceStruct {
@@ -33,11 +32,9 @@ service Info {
 }
 
 service Device {
-    Status getStatus();
-
     list<string> getAvailableCommands();
 
-    string acquireControl();
+    string acquireControl() throws (1:DeviceInUseException e);
     string releaseControl();
 
     oneway void startMonitoring(1:string address, 2:i32 port);

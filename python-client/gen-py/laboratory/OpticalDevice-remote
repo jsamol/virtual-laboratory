@@ -30,7 +30,6 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('  string lookDown(i32 angle)')
     print('  string rotateRight(i32 angle)')
     print('  string rotateLeft(i32 angle)')
-    print('  Status getStatus()')
     print('   getAvailableCommands()')
     print('  string acquireControl()')
     print('  string releaseControl()')
@@ -150,12 +149,6 @@ elif cmd == 'rotateLeft':
         print('rotateLeft requires 1 args')
         sys.exit(1)
     pp.pprint(client.rotateLeft(eval(args[0]),))
-
-elif cmd == 'getStatus':
-    if len(args) != 0:
-        print('getStatus requires 0 args')
-        sys.exit(1)
-    pp.pprint(client.getStatus())
 
 elif cmd == 'getAvailableCommands':
     if len(args) != 0:

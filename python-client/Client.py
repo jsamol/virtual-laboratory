@@ -17,8 +17,8 @@ from laboratory.robotplatform import MobileRoboticPlatform
 from laboratory.robotplatform import AdvancedMobileRoboticPlatform
 from laboratory.telescope import Telescope
 
-from laboratory.ttypes import Status
 from laboratory.ttypes import InvalidOperationException
+from laboratory.ttypes import DeviceInUseException
 from laboratory.roboticarm.ttypes import ArmMovementType
 from laboratory.robotplatform.ttypes import MovementType
 from laboratory.robotplatform.ttypes import OrderStruct
@@ -83,13 +83,12 @@ def main():
                 print("Invalid device name!")
             else:
                 device = devices[device_name]
-                status = device.getStatus()
-                if status == Status.AVAILABLE:
+                try:
                     print(device.acquireControl())
                     controlled_device = device
                     use_device(device_name, device)
-                elif status == Status.NOT_AVAILABLE:
-                    print("Sorry, device is used by someone else.")
+                except DeviceInUseException as e:
+                    print(e.alert)
                     answer = input("Do you want to start monitoring this device? (y/n) ")
                     if answer == "y":
                         monitor(device)

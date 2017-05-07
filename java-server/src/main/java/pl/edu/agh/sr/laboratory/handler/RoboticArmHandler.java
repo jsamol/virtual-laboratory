@@ -3,6 +3,7 @@ package pl.edu.agh.sr.laboratory.handler;
 import org.apache.thrift.TException;
 import pl.edu.agh.sr.laboratory.ClientNotifier;
 import pl.edu.agh.sr.laboratory.Server;
+import pl.edu.agh.sr.rpc.laboratory.DeviceInUseException;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.InvalidOperationException;
 import pl.edu.agh.sr.rpc.laboratory.Status;
@@ -31,17 +32,6 @@ public class RoboticArmHandler implements RoboticArm.Iface {
     }
 
     @Override
-    public Status getStatus() throws TException {
-        System.out.println("Robotic Arm #" + deviceInfo.getId() + ": getStatus()");
-        if (isAvailable) {
-            return Status.AVAILABLE;
-        }
-        else {
-            return Status.NOT_AVAILABLE;
-        }
-    }
-
-    @Override
     public List<String> getAvailableCommands() throws TException {
         System.out.println("Robotic Arm #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
@@ -56,9 +46,18 @@ public class RoboticArmHandler implements RoboticArm.Iface {
     }
 
     @Override
-    public String acquireControl() throws TException {
+    public String acquireControl() throws DeviceInUseException, TException {
         System.out.println("Robotic Arm#" + deviceInfo.getId() + ": acquireControl()");
-        isAvailable = false;
+        synchronized (this) {
+            if (isAvailable) {
+                isAvailable = false;
+            }
+            else {
+                DeviceInUseException e = new DeviceInUseException();
+                e.alert = "Someone else is already using Robotic Arm #" + deviceInfo.getId();
+                throw e;
+            }
+        }
         String returnMessage =  "Robotic Arm #" + deviceInfo.getId() + " acquired.";
         for (ClientNotifier notifier : Server.getNotifiers()) {
             notifier.notify(returnMessage);

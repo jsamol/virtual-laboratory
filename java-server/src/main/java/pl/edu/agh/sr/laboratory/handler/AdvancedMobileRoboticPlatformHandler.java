@@ -3,6 +3,7 @@ package pl.edu.agh.sr.laboratory.handler;
 import org.apache.thrift.TException;
 import pl.edu.agh.sr.laboratory.ClientNotifier;
 import pl.edu.agh.sr.laboratory.Server;
+import pl.edu.agh.sr.rpc.laboratory.DeviceInUseException;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.InvalidOperationException;
 import pl.edu.agh.sr.rpc.laboratory.Status;
@@ -32,17 +33,6 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
     }
 
     @Override
-    public Status getStatus() throws TException {
-        System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": getStatus()");
-        if (isAvailable) {
-            return Status.AVAILABLE;
-        }
-        else {
-            return Status.NOT_AVAILABLE;
-        }
-    }
-
-    @Override
     public List<String> getAvailableCommands() throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
@@ -59,9 +49,18 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
     }
 
     @Override
-    public String acquireControl() throws TException {
-        System.out.println("Advanced Mobile Robotic Platform#" + deviceInfo.getId() + ": acquireControl()");
-        isAvailable = false;
+    public String acquireControl() throws DeviceInUseException, TException {
+        System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": acquireControl()");
+        synchronized (this) {
+            if (isAvailable) {
+                isAvailable = false;
+            }
+            else {
+                DeviceInUseException e = new DeviceInUseException();
+                e.alert = "Someone else is already using Advanced Mobile Robotic Platform #" + deviceInfo.getId();
+                throw e;
+            }
+        }
         String returnMessage =  "Advanced Mobile Robotic Platform #" + deviceInfo.getId() + " acquired.";
         for (ClientNotifier notifier : Server.getNotifiers()) {
             notifier.notify(returnMessage);

@@ -3,6 +3,7 @@ package pl.edu.agh.sr.laboratory.handler;
 import org.apache.thrift.TException;
 import pl.edu.agh.sr.laboratory.ClientNotifier;
 import pl.edu.agh.sr.laboratory.Server;
+import pl.edu.agh.sr.rpc.laboratory.DeviceInUseException;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.camera.AdvancedCamera;
@@ -49,17 +50,6 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
     }
 
     @Override
-    public Status getStatus() throws TException {
-        System.out.println("Advanced Camera #" + deviceInfo.getId() + ": getStatus()");
-        if (isAvailable) {
-            return Status.AVAILABLE;
-        }
-        else {
-            return Status.NOT_AVAILABLE;
-        }
-    }
-
-    @Override
     public List<String> getAvailableCommands() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
@@ -83,9 +73,18 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
     }
 
     @Override
-    public String acquireControl() throws TException {
+    public String acquireControl() throws DeviceInUseException, TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": acquireControl()");
-        isAvailable = false;
+        synchronized (this) {
+            if (isAvailable) {
+                isAvailable = false;
+            }
+            else {
+                DeviceInUseException e = new DeviceInUseException();
+                e.alert = "Someone else is already using Advanced Camera #" + deviceInfo.getId();
+                throw e;
+            }
+        }
 
         String returnMessage = "Advanced Camera #" + deviceInfo.getId() + " acquired.";
         
