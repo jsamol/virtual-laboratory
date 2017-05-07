@@ -16,12 +16,24 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
 
     private boolean isAvailable;
 
+    private int maxVerticalAngle;
+    private int minVerticalAngle;
+
+    private int currentVerticalAngle;
+    private int currentHorizontalAngle;
+
     public PreciseRoboticArmHandler(int id) {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Precise Robotic Arm");
 
         this.isAvailable = true;
+
+        this.maxVerticalAngle = 90;
+        this.minVerticalAngle = -90;
+
+        this.currentVerticalAngle = 0;
+        this.currentHorizontalAngle = 0;
     }
 
     @Override
@@ -37,11 +49,13 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
 
     @Override
     public List<String> getAvailableCommands() throws TException {
+        System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": getAvailableCom()");
         String[] commands = {
-                "\\move [type] [angle]",
+                "\\p_move [raise|drop|right|left] [angle]",
                 "\\grab",
                 "\\release",
-                "\\move [type]",
+                "\\move [raise|drop|right|left]",
+                "\\commands",
                 "\\end"
         };
 
@@ -73,9 +87,43 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
     }
 
     @Override
-    public int movePrecisely(ArmMovementType armMovementType, int angle) throws InvalidOperationException, TException {
+    public String movePrecisely(ArmMovementType armMovementType, int angle) throws InvalidOperationException, TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": movePrecisely()");
-        return 0;
+        switch(armMovementType) {
+            case RAISE:
+                currentVerticalAngle = currentVerticalAngle + angle;
+                if (currentVerticalAngle > maxVerticalAngle) {
+                    currentVerticalAngle = maxVerticalAngle;
+                }
+                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                        ": current vertical angle: " + currentVerticalAngle;
+            case DROP:
+                currentVerticalAngle = currentVerticalAngle - angle;
+                if (currentVerticalAngle < minVerticalAngle) {
+                    currentVerticalAngle = minVerticalAngle;
+                }
+                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                        ": current vertical angle: " + currentVerticalAngle;
+            case ROTATE_RIGHT:
+                currentHorizontalAngle = currentHorizontalAngle + angle;
+                if (currentHorizontalAngle > 360) {
+                    currentHorizontalAngle = currentHorizontalAngle - 360;
+                }
+                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                        ": current horizontal angle: " + currentHorizontalAngle;
+            case ROTATE_LEFT:
+                currentHorizontalAngle = currentHorizontalAngle - angle;
+                if (currentHorizontalAngle < 0) {
+                    currentHorizontalAngle = 360 + currentHorizontalAngle;
+                }
+                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                        ": current horizontal angle: " + currentHorizontalAngle;
+            default:
+                InvalidOperationException e = new InvalidOperationException();
+                e.setWhatOp(armMovementType.getValue());
+                e.setWhy("Invalid operation.");
+                throw e;
+        }
     }
 
     @Override
@@ -93,7 +141,21 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
     @Override
     public String move(ArmMovementType armMovementType) throws InvalidOperationException, TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": move(" + armMovementType + ")");
-        return null;
+        switch(armMovementType) {
+            case RAISE:
+                return "Precise Robotic Arm #" + deviceInfo.getId() + ": raised.";
+            case DROP:
+                return "Precise Robotic Arm #" + deviceInfo.getId() + ": dropped.";
+            case ROTATE_RIGHT:
+                return "Precise Robotic Arm #" + deviceInfo.getId() + ": rotated right.";
+            case ROTATE_LEFT:
+                return "Precise Robotic Arm #" + deviceInfo.getId() + ": rotated left.";
+            default:
+                InvalidOperationException e = new InvalidOperationException();
+                e.setWhatOp(armMovementType.getValue());
+                e.setWhy("Invalid operation.");
+                throw e;
+        }
     }
 
     public DeviceStruct getDeviceInfo() {

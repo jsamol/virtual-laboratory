@@ -26,13 +26,14 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Functions:')
     print('  string startRecording()')
     print('  string stopRecording()')
-    print('  i32 zoomIn(i32 value)')
-    print('  i32 zoomOut(i32 value)')
-    print('  i32 lookUp(i32 angle)')
-    print('  i32 lookDown(i32 angle)')
-    print('  i32 rotateRight(i32 angle)')
-    print('  i32 rotateLeft(i32 angle)')
+    print('  string zoomIn(i32 value)')
+    print('  string zoomOut(i32 value)')
+    print('  string lookUp(i32 angle)')
+    print('  string lookDown(i32 angle)')
+    print('  string rotateRight(i32 angle)')
+    print('  string rotateLeft(i32 angle)')
     print('  Status getStatus()')
+    print('   getAvailableCommands()')
     print('  string acquireControl()')
     print('  string releaseControl()')
     print('  void startMonitoring()')
@@ -169,6 +170,12 @@ elif cmd == 'getStatus':
         print('getStatus requires 0 args')
         sys.exit(1)
     pp.pprint(client.getStatus())
+
+elif cmd == 'getAvailableCommands':
+    if len(args) != 0:
+        print('getAvailableCommands requires 0 args')
+        sys.exit(1)
+    pp.pprint(client.getAvailableCommands())
 
 elif cmd == 'acquireControl':
     if len(args) != 0:

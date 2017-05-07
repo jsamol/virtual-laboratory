@@ -63,6 +63,7 @@ public class TelescopeHandler implements Telescope.Iface {
 
     @Override
     public List<String> getAvailableCommands() throws TException {
+        System.out.println("Telescope #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
                 "\\zoom_in [value]",
                 "\\zoom_out [value]",
@@ -70,8 +71,9 @@ public class TelescopeHandler implements Telescope.Iface {
                 "\\look_down [angle]",
                 "\\rotate_right [angle]",
                 "\\rotate_left [angle]",
-                "\\adjust",
+                "\\adjust [value]",
                 "\\take_photo",
+                "\\commands",
                 "\\end"
         };
 
@@ -103,70 +105,71 @@ public class TelescopeHandler implements Telescope.Iface {
     }
 
     @Override
-    public int zoomIn(int value) throws TException {
+    public String zoomIn(int value) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": zoomIn()");
+        currentZoom = currentZoom + value;
         if (currentZoom > maxZoom) {
             currentZoom = maxZoom;
         }
-        return currentZoom;
+        return "Telescope #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
     }
 
     @Override
-    public int zoomOut(int value) throws TException {
+    public String zoomOut(int value) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": zoomOut()");
         currentZoom = currentZoom - value;
         if (currentZoom < minZoom) {
             currentZoom = minZoom;
         }
-        return currentZoom;
+        return "Telescope #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
     }
 
     @Override
-    public int lookUp(int angle) throws TException {
+    public String lookUp(int angle) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": lookUp()");
         currentVerticalAngle = currentVerticalAngle + angle;
         if (currentVerticalAngle > maxVerticalAngle) {
             currentVerticalAngle = maxVerticalAngle;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new vertical angle: " + currentVerticalAngle);
-        return currentVerticalAngle;
+        return "Telescope #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
     }
 
     @Override
-    public int lookDown(int angle) throws TException {
+    public String lookDown(int angle) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": lookDown()");
         currentVerticalAngle = currentVerticalAngle - angle;
         if (currentVerticalAngle < minVerticalAngle) {
             currentVerticalAngle = minVerticalAngle;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new vertical angle: " + currentVerticalAngle);
-        return currentVerticalAngle;
+        return "Telescope #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
     }
 
     @Override
-    public int rotateRight(int angle) throws TException {
+    public String rotateRight(int angle) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": rotateRight()");
         currentHorizontalAngle = currentHorizontalAngle + angle;
         if (currentHorizontalAngle > 360) {
             currentHorizontalAngle = currentVerticalAngle - 360;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new horizontal angle: " + currentHorizontalAngle);
-        return currentHorizontalAngle;
+        return "Telescope #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
     }
 
     @Override
-    public int rotateLeft(int angle) throws TException {
+    public String rotateLeft(int angle) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": rotateLeft()");
         currentHorizontalAngle = currentHorizontalAngle - angle;
         if (currentHorizontalAngle < 0) {
-            currentHorizontalAngle = 360 - currentHorizontalAngle;
+            currentHorizontalAngle = 360 + currentHorizontalAngle;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new horizontal angle: " + currentHorizontalAngle);
-        return currentHorizontalAngle;
+        return "Telescope #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
     }
 
     @Override
-    public int adjustFocus(int value) throws TException {
+    public String adjustFocus(int value) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": adjustFocus()");
         currentFocusWheelPosition = currentFocusWheelPosition + value;
         if (currentFocusWheelPosition < minFocusWheelPosition) {
@@ -177,7 +180,7 @@ public class TelescopeHandler implements Telescope.Iface {
         }
         System.out.println("> Telescope #" +
                 deviceInfo.getId() + ": new focus wheel position: " + currentFocusWheelPosition);
-        return currentFocusWheelPosition;
+        return "Telescope #" + deviceInfo.getId() + ": current focus wheel position: " + currentFocusWheelPosition;
     }
 
     @Override

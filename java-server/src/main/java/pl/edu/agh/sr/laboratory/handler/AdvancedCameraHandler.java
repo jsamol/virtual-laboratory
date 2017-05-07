@@ -55,6 +55,7 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
 
     @Override
     public List<String> getAvailableCommands() throws TException {
+        System.out.println("Advanced Camera #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
                 "\\zoom_in [value]",
                 "\\zoom_out [value]",
@@ -62,12 +63,13 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
                 "\\look_down [angle]",
                 "\\rotate_right [angle]",
                 "\\rotate_left [angle]",
-                "\\night_vision on",
-                "\\night_vision off",
-                "\\thermography on",
-                "\\thermography off",
+                "\\night_vision_on",
+                "\\night_vision_off",
+                "\\thermography_on",
+                "\\thermography_off",
                 "\\start_recording",
                 "\\stop_recording",
+                "\\commands",
                 "\\end"
         };
 
@@ -99,26 +101,27 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
     }
 
     @Override
-    public int zoomIn(int value) throws TException {
+    public String zoomIn(int value) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": zoomIn()");
+        currentZoom = currentZoom + value;
         if (currentZoom > maxZoom) {
             currentZoom = maxZoom;
         }
-        return currentZoom;
+        return "Advanced Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
     }
 
     @Override
-    public int zoomOut(int value) throws TException {
+    public String zoomOut(int value) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": zoomOut()");
         currentZoom = currentZoom - value;
         if (currentZoom < minZoom) {
             currentZoom = minZoom;
         }
-        return currentZoom;
+        return "Advanced Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
     }
 
     @Override
-    public int lookUp(int angle) throws TException {
+    public String lookUp(int angle) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": lookUp()");
         currentVerticalAngle = currentVerticalAngle + angle;
         if (currentVerticalAngle > maxVerticalAngle) {
@@ -126,11 +129,11 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new vertical angle: " + currentVerticalAngle);
-        return currentVerticalAngle;
+        return "Advanced Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
     }
 
     @Override
-    public int lookDown(int angle) throws TException {
+    public String lookDown(int angle) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": lookDown()");
         currentVerticalAngle = currentVerticalAngle - angle;
         if (currentVerticalAngle < minVerticalAngle) {
@@ -138,11 +141,11 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new vertical angle: " + currentVerticalAngle);
-        return currentVerticalAngle;
+        return "Advanced Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
     }
 
     @Override
-    public int rotateRight(int angle) throws TException {
+    public String rotateRight(int angle) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": rotateRight()");
         currentHorizontalAngle = currentHorizontalAngle + angle;
         if (currentHorizontalAngle > 360) {
@@ -150,19 +153,19 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new horizontal angle: " + currentHorizontalAngle);
-        return currentHorizontalAngle;
+        return "Advanced Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
     }
 
     @Override
-    public int rotateLeft(int angle) throws TException {
+    public String rotateLeft(int angle) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": rotateLeft()");
         currentHorizontalAngle = currentHorizontalAngle - angle;
         if (currentHorizontalAngle < 0) {
-            currentHorizontalAngle = 360 - currentHorizontalAngle;
+            currentHorizontalAngle = 360 + currentHorizontalAngle;
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new horizontal angle: " + currentHorizontalAngle);
-        return currentHorizontalAngle;
+        return "Advanced Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
     }
 
     @Override

@@ -185,7 +185,7 @@ class doSequenceOfMovements_result(object):
     """
 
     thrift_spec = (
-        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
+        (0, TType.LIST, 'success', (TType.STRING, 'UTF8', False), None, ),  # 0
         (1, TType.STRUCT, 'e', (laboratory.ttypes.InvalidOperationException, laboratory.ttypes.InvalidOperationException.thrift_spec), None, ),  # 1
     )
 
@@ -203,8 +203,13 @@ class doSequenceOfMovements_result(object):
             if ftype == TType.STOP:
                 break
             if fid == 0:
-                if ftype == TType.STRING:
-                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.LIST:
+                    self.success = []
+                    (_etype10, _size7) = iprot.readListBegin()
+                    for _i11 in range(_size7):
+                        _elem12 = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                        self.success.append(_elem12)
+                    iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
             elif fid == 1:
@@ -224,8 +229,11 @@ class doSequenceOfMovements_result(object):
             return
         oprot.writeStructBegin('doSequenceOfMovements_result')
         if self.success is not None:
-            oprot.writeFieldBegin('success', TType.STRING, 0)
-            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
+            oprot.writeFieldBegin('success', TType.LIST, 0)
+            oprot.writeListBegin(TType.STRING, len(self.success))
+            for iter13 in self.success:
+                oprot.writeString(iter13.encode('utf-8') if sys.version_info[0] == 2 else iter13)
+            oprot.writeListEnd()
             oprot.writeFieldEnd()
         if self.e is not None:
             oprot.writeFieldBegin('e', TType.STRUCT, 1)

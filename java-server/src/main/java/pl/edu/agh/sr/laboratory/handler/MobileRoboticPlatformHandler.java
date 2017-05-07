@@ -35,11 +35,13 @@ public class MobileRoboticPlatformHandler implements MobileRoboticPlatform.Iface
 
     @Override
     public List<String> getAvailableCommands() throws TException {
+        System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
                 "\\forwards [distance]",
                 "\\backwards [distance]",
                 "\\right [angle]",
                 "\\left [angle]",
+                "\\commands",
                 "\\end"
         };
 

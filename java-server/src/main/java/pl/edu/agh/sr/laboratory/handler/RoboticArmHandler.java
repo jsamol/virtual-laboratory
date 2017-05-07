@@ -37,10 +37,12 @@ public class RoboticArmHandler implements RoboticArm.Iface {
 
     @Override
     public List<String> getAvailableCommands() throws TException {
+        System.out.println("Robotic Arm #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
                 "\\grab",
                 "\\release",
-                "\\move [type]",
+                "\\move [raise|drop|right|left]",
+                "\\commands",
                 "\\end"
         };
 
@@ -86,7 +88,21 @@ public class RoboticArmHandler implements RoboticArm.Iface {
     @Override
     public String move(ArmMovementType armMovementType) throws InvalidOperationException, TException {
         System.out.println("Robotic Arm #" + deviceInfo.getId() + ": move(" + armMovementType + ")");
-        return null;
+        switch(armMovementType) {
+            case RAISE:
+                return "Robotic Arm #" + deviceInfo.getId() + ": raised.";
+            case DROP:
+                return "Robotic Arm #" + deviceInfo.getId() + ": dropped.";
+            case ROTATE_RIGHT:
+                return "Robotic Arm #" + deviceInfo.getId() + ": rotated right.";
+            case ROTATE_LEFT:
+                return "Robotic Arm #" + deviceInfo.getId() + ": rotated left.";
+            default:
+                InvalidOperationException e = new InvalidOperationException();
+                e.setWhatOp(armMovementType.getValue());
+                e.setWhy("Invalid operation.");
+                throw e;
+        }
     }
 
 

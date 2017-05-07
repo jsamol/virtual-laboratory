@@ -5,6 +5,7 @@ import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.InvalidOperationException;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.roboticplatform.AdvancedMobileRoboticPlatform;
+import pl.edu.agh.sr.rpc.laboratory.roboticplatform.MovementType;
 import pl.edu.agh.sr.rpc.laboratory.roboticplatform.OrderStruct;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
     public AdvancedMobileRoboticPlatformHandler(int id) {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
-        this.deviceInfo.setType("Mobile Robotic Platform");
+        this.deviceInfo.setType("Advanced Mobile Robotic Platform");
 
         this.isAvailable = true;
     }
@@ -37,12 +38,14 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
 
     @Override
     public List<String> getAvailableCommands() throws TException {
+        System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": getAvailableCommands()");
         String[] commands = {
-                "\\do [list of operations]",
+                "\\do [list of commands]]",
                 "\\forwards [distance]",
                 "\\backwards [distance]",
                 "\\right [angle]",
                 "\\left [angle]",
+                "\\commands",
                 "\\end"
         };
 
@@ -74,12 +77,33 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
     }
 
     @Override
-    public String doSequenceOfMovements(List<OrderStruct> orders) throws InvalidOperationException, TException {
+    public List<String> doSequenceOfMovements(List<OrderStruct> orders) throws InvalidOperationException, TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": doSequenceOfMovements()");
+        List<String> result = new ArrayList<>();
         for (OrderStruct order : orders) {
-            //TODO
+            MovementType type = order.getMovementType();
+            int param = order.getParam();
+            switch (type) {
+                case FORWARDS:
+                    result.add(goForwards(param));
+                    break;
+                case BACKWARDS:
+                    result.add(goBackwards(param));
+                    break;
+                case LEFT:
+                    result.add(goLeft(param));
+                    break;
+                case RIGHT:
+                    result.add(goRight(param));
+                    break;
+                default:
+                    InvalidOperationException e = new InvalidOperationException();
+                    e.setWhatOp(type.getValue());
+                    e.setWhy("Unknown operation.");
+                    throw e;
+            }
         }
-        return "";
+        return result;
     }
 
     @Override

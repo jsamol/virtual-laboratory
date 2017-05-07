@@ -219,7 +219,7 @@ class adjustFocus_result(object):
     """
 
     thrift_spec = (
-        (0, TType.I32, 'success', None, None, ),  # 0
+        (0, TType.STRING, 'success', 'UTF8', None, ),  # 0
     )
 
     def __init__(self, success=None,):
@@ -235,8 +235,8 @@ class adjustFocus_result(object):
             if ftype == TType.STOP:
                 break
             if fid == 0:
-                if ftype == TType.I32:
-                    self.success = iprot.readI32()
+                if ftype == TType.STRING:
+                    self.success = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -250,8 +250,8 @@ class adjustFocus_result(object):
             return
         oprot.writeStructBegin('adjustFocus_result')
         if self.success is not None:
-            oprot.writeFieldBegin('success', TType.I32, 0)
-            oprot.writeI32(self.success)
+            oprot.writeFieldBegin('success', TType.STRING, 0)
+            oprot.writeString(self.success.encode('utf-8') if sys.version_info[0] == 2 else self.success)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
