@@ -1,8 +1,6 @@
 package pl.edu.agh.sr.laboratory;
 
 import org.apache.thrift.TMultiplexedProcessor;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.*;
@@ -27,6 +25,8 @@ public class Server {
     private static final int port = 9090;
     private static final Map<String, Integer> numbers = new HashMap<>();
 
+    private static List<ClientNotifier> notifiers;
+
     private static List<DeviceStruct> devices;
 
     private TMultiplexedProcessor multiplexedProcessor;
@@ -40,12 +40,15 @@ public class Server {
         numbers.put("parms", 2);
         numbers.put("telescopes", 3);
 
+        notifiers = new ArrayList<>();
+
         devices = new ArrayList<>();
 
         multiplexedProcessor = new TMultiplexedProcessor();
     }
 
     private void start() throws TTransportException {
+
         setupEquipment();
         multiplexedProcessor.registerProcessor("Info", new Info.Processor<>(InfoHandler.getInstance()));
 
@@ -123,6 +126,10 @@ public class Server {
             String name = "Telescope #" + i;
             multiplexedProcessor.registerProcessor(name, new Telescope.Processor<>(telescopeHandler));
         }
+    }
+
+    public synchronized static List<ClientNotifier> getNotifiers() {
+        return notifiers;
     }
 
     public static Map<String, Integer> getNumbers() {

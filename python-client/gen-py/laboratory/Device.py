@@ -28,10 +28,20 @@ class Iface(object):
     def releaseControl(self):
         pass
 
-    def startMonitoring(self):
+    def startMonitoring(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
         pass
 
-    def stopMonitoring(self):
+    def stopMonitoring(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
         pass
 
 
@@ -146,53 +156,39 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "releaseControl failed: unknown result")
 
-    def startMonitoring(self):
-        self.send_startMonitoring()
-        self.recv_startMonitoring()
+    def startMonitoring(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
+        self.send_startMonitoring(address, port)
 
-    def send_startMonitoring(self):
-        self._oprot.writeMessageBegin('startMonitoring', TMessageType.CALL, self._seqid)
+    def send_startMonitoring(self, address, port):
+        self._oprot.writeMessageBegin('startMonitoring', TMessageType.ONEWAY, self._seqid)
         args = startMonitoring_args()
+        args.address = address
+        args.port = port
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_startMonitoring(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = startMonitoring_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        return
+    def stopMonitoring(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
+        self.send_stopMonitoring(address, port)
 
-    def stopMonitoring(self):
-        self.send_stopMonitoring()
-        self.recv_stopMonitoring()
-
-    def send_stopMonitoring(self):
-        self._oprot.writeMessageBegin('stopMonitoring', TMessageType.CALL, self._seqid)
+    def send_stopMonitoring(self, address, port):
+        self._oprot.writeMessageBegin('stopMonitoring', TMessageType.ONEWAY, self._seqid)
         args = stopMonitoring_args()
+        args.address = address
+        args.port = port
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
-
-    def recv_stopMonitoring(self):
-        iprot = self._iprot
-        (fname, mtype, rseqid) = iprot.readMessageBegin()
-        if mtype == TMessageType.EXCEPTION:
-            x = TApplicationException()
-            x.read(iprot)
-            iprot.readMessageEnd()
-            raise x
-        result = stopMonitoring_result()
-        result.read(iprot)
-        iprot.readMessageEnd()
-        return
 
 
 class Processor(Iface, TProcessor):
@@ -301,39 +297,23 @@ class Processor(Iface, TProcessor):
         args = startMonitoring_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = startMonitoring_result()
         try:
-            self._handler.startMonitoring()
-            msg_type = TMessageType.REPLY
+            self._handler.startMonitoring(args.address, args.port)
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
-        except Exception as ex:
-            msg_type = TMessageType.EXCEPTION
-            logging.exception(ex)
-            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("startMonitoring", msg_type, seqid)
-        result.write(oprot)
-        oprot.writeMessageEnd()
-        oprot.trans.flush()
+        except:
+            pass
 
     def process_stopMonitoring(self, seqid, iprot, oprot):
         args = stopMonitoring_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = stopMonitoring_result()
         try:
-            self._handler.stopMonitoring()
-            msg_type = TMessageType.REPLY
+            self._handler.stopMonitoring(args.address, args.port)
         except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
             raise
-        except Exception as ex:
-            msg_type = TMessageType.EXCEPTION
-            logging.exception(ex)
-            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("stopMonitoring", msg_type, seqid)
-        result.write(oprot)
-        oprot.writeMessageEnd()
-        oprot.trans.flush()
+        except:
+            pass
 
 # HELPER FUNCTIONS AND STRUCTURES
 
@@ -751,9 +731,21 @@ class releaseControl_result(object):
 
 
 class startMonitoring_args(object):
+    """
+    Attributes:
+     - address
+     - port
+    """
 
     thrift_spec = (
+        None,  # 0
+        (1, TType.STRING, 'address', 'UTF8', None, ),  # 1
+        (2, TType.I32, 'port', None, None, ),  # 2
     )
+
+    def __init__(self, address=None, port=None,):
+        self.address = address
+        self.port = port
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -764,6 +756,16 @@ class startMonitoring_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.address = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I32:
+                    self.port = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -774,48 +776,14 @@ class startMonitoring_args(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('startMonitoring_args')
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-
-
-class startMonitoring_result(object):
-
-    thrift_spec = (
-    )
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, (self.__class__, self.thrift_spec))
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
-            return
-        oprot.writeStructBegin('startMonitoring_result')
+        if self.address is not None:
+            oprot.writeFieldBegin('address', TType.STRING, 1)
+            oprot.writeString(self.address.encode('utf-8') if sys.version_info[0] == 2 else self.address)
+            oprot.writeFieldEnd()
+        if self.port is not None:
+            oprot.writeFieldBegin('port', TType.I32, 2)
+            oprot.writeI32(self.port)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -835,9 +803,21 @@ class startMonitoring_result(object):
 
 
 class stopMonitoring_args(object):
+    """
+    Attributes:
+     - address
+     - port
+    """
 
     thrift_spec = (
+        None,  # 0
+        (1, TType.STRING, 'address', 'UTF8', None, ),  # 1
+        (2, TType.I32, 'port', None, None, ),  # 2
     )
+
+    def __init__(self, address=None, port=None,):
+        self.address = address
+        self.port = port
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -848,6 +828,16 @@ class stopMonitoring_args(object):
             (fname, ftype, fid) = iprot.readFieldBegin()
             if ftype == TType.STOP:
                 break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.address = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I32:
+                    self.port = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -858,48 +848,14 @@ class stopMonitoring_args(object):
             oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
             return
         oprot.writeStructBegin('stopMonitoring_args')
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-
-
-class stopMonitoring_result(object):
-
-    thrift_spec = (
-    )
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, (self.__class__, self.thrift_spec))
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
-            return
-        oprot.writeStructBegin('stopMonitoring_result')
+        if self.address is not None:
+            oprot.writeFieldBegin('address', TType.STRING, 1)
+            oprot.writeString(self.address.encode('utf-8') if sys.version_info[0] == 2 else self.address)
+            oprot.writeFieldEnd()
+        if self.port is not None:
+            oprot.writeFieldBegin('port', TType.I32, 2)
+            oprot.writeI32(self.port)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 

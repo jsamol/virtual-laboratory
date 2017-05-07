@@ -1,6 +1,8 @@
 package pl.edu.agh.sr.laboratory.handler;
 
 import org.apache.thrift.TException;
+import pl.edu.agh.sr.laboratory.ClientNotifier;
+import pl.edu.agh.sr.laboratory.Server;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.telescope.Telescope;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public class TelescopeHandler implements Telescope.Iface {
     private DeviceStruct deviceInfo;
+
+    private List<ClientNotifier> notifiers;
 
     private boolean isAvailable;
 
@@ -32,6 +36,8 @@ public class TelescopeHandler implements Telescope.Iface {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Telescope");
+
+        this.notifiers = new ArrayList<>();
 
         this.isAvailable = true;
 
@@ -84,24 +90,46 @@ public class TelescopeHandler implements Telescope.Iface {
     public String acquireControl() throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": acquireControl()");
         isAvailable = false;
-        return "Telescope #" + deviceInfo.getId() + " acquired.";
+        String returnMessage =  "Telescope #" + deviceInfo.getId() + " acquired.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String releaseControl() throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": releaseControl()");
         isAvailable = true;
-        return "Telescope #" + deviceInfo.getId() + " released.";
+        String returnMessage =  "Telescope #" + deviceInfo.getId() + " released.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
-    public void startMonitoring() throws TException {
+    public void startMonitoring(String address, int port) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": startMonitoring()");
+        notifiers.add(new ClientNotifier(address, port));
     }
 
     @Override
-    public void stopMonitoring() throws TException {
+    public void stopMonitoring(String address, int port) throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": stopMonitoring()");
+        for (ClientNotifier notifier : notifiers) {
+            if (notifier.getAddress().equals(address) && notifier.getPort() == port) {
+                notifiers.remove(notifier);
+            }
+        }
     }
 
     @Override
@@ -111,7 +139,15 @@ public class TelescopeHandler implements Telescope.Iface {
         if (currentZoom > maxZoom) {
             currentZoom = maxZoom;
         }
-        return "Telescope #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        String returnMessage =  "Telescope #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -121,7 +157,15 @@ public class TelescopeHandler implements Telescope.Iface {
         if (currentZoom < minZoom) {
             currentZoom = minZoom;
         }
-        return "Telescope #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        String returnMessage =  "Telescope #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -132,7 +176,16 @@ public class TelescopeHandler implements Telescope.Iface {
             currentVerticalAngle = maxVerticalAngle;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new vertical angle: " + currentVerticalAngle);
-        return "Telescope #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        String returnMessage =  "Telescope #"
+                + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -143,7 +196,16 @@ public class TelescopeHandler implements Telescope.Iface {
             currentVerticalAngle = minVerticalAngle;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new vertical angle: " + currentVerticalAngle);
-        return "Telescope #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        String returnMessage =  "Telescope #"
+                + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -154,7 +216,16 @@ public class TelescopeHandler implements Telescope.Iface {
             currentHorizontalAngle = currentVerticalAngle - 360;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new horizontal angle: " + currentHorizontalAngle);
-        return "Telescope #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        String returnMessage =  "Telescope #"
+                + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -165,7 +236,16 @@ public class TelescopeHandler implements Telescope.Iface {
             currentHorizontalAngle = 360 + currentHorizontalAngle;
         }
         System.out.println("> Telescope #" + deviceInfo.getId() + ": new horizontal angle: " + currentHorizontalAngle);
-        return "Telescope #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        String returnMessage =  "Telescope #"
+                + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -180,13 +260,30 @@ public class TelescopeHandler implements Telescope.Iface {
         }
         System.out.println("> Telescope #" +
                 deviceInfo.getId() + ": new focus wheel position: " + currentFocusWheelPosition);
-        return "Telescope #" + deviceInfo.getId() + ": current focus wheel position: " + currentFocusWheelPosition;
+        String returnMessage =  "Telescope #"
+                + deviceInfo.getId() + ": current focus wheel position: " + currentFocusWheelPosition;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String takePhoto() throws TException {
         System.out.println("Telescope #" + deviceInfo.getId() + ": takePhoto()");
-        return "Telescope #" + deviceInfo.getId() + " photo saved.";
+        String returnMessage =  "Telescope #" + deviceInfo.getId() + " photo saved.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     public DeviceStruct getDeviceInfo() {

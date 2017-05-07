@@ -1,6 +1,8 @@
 package pl.edu.agh.sr.laboratory.handler;
 
 import org.apache.thrift.TException;
+import pl.edu.agh.sr.laboratory.ClientNotifier;
+import pl.edu.agh.sr.laboratory.Server;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.InvalidOperationException;
 import pl.edu.agh.sr.rpc.laboratory.Status;
@@ -14,6 +16,8 @@ import java.util.List;
 public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
     private DeviceStruct deviceInfo;
 
+    private List<ClientNotifier> notifiers;
+
     private boolean isAvailable;
 
     private int maxVerticalAngle;
@@ -26,6 +30,8 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Precise Robotic Arm");
+
+        this.notifiers = new ArrayList<>();
 
         this.isAvailable = true;
 
@@ -66,96 +72,162 @@ public class PreciseRoboticArmHandler implements PreciseRoboticArm.Iface {
     public String acquireControl() throws TException {
         System.out.println("Precise Robotic Arm#" + deviceInfo.getId() + ": acquireControl()");
         isAvailable = false;
-        return "Precise Robotic Arm #" + deviceInfo.getId() + " acquired.";
+        String returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + " acquired.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String releaseControl() throws TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": releaseControl()");
         isAvailable = true;
-        return "Precise Robotic Arm #" + deviceInfo.getId() + " released.";
+        String returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + " released.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
-    public void startMonitoring() throws TException {
+    public void startMonitoring(String address, int port) throws TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": startMonitoring()");
+        notifiers.add(new ClientNotifier(address, port));
     }
 
     @Override
-    public void stopMonitoring() throws TException {
+    public void stopMonitoring(String address, int port) throws TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": stopMonitoring()");
+        for (ClientNotifier notifier : notifiers) {
+            if (notifier.getAddress().equals(address) && notifier.getPort() == port) {
+                notifiers.remove(notifier);
+            }
+        }
     }
 
     @Override
-    public String movePrecisely(ArmMovementType armMovementType, int angle) throws InvalidOperationException, TException {
+    public String movePrecisely(ArmMovementType armMovementType, int angle)
+            throws InvalidOperationException, TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": movePrecisely()");
+        String returnMessage;
         switch(armMovementType) {
             case RAISE:
                 currentVerticalAngle = currentVerticalAngle + angle;
                 if (currentVerticalAngle > maxVerticalAngle) {
                     currentVerticalAngle = maxVerticalAngle;
                 }
-                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() +
                         ": current vertical angle: " + currentVerticalAngle;
+                break;
             case DROP:
                 currentVerticalAngle = currentVerticalAngle - angle;
                 if (currentVerticalAngle < minVerticalAngle) {
                     currentVerticalAngle = minVerticalAngle;
                 }
-                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() +
                         ": current vertical angle: " + currentVerticalAngle;
+                break;
             case ROTATE_RIGHT:
                 currentHorizontalAngle = currentHorizontalAngle + angle;
                 if (currentHorizontalAngle > 360) {
                     currentHorizontalAngle = currentHorizontalAngle - 360;
                 }
-                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() +
                         ": current horizontal angle: " + currentHorizontalAngle;
+                break;
             case ROTATE_LEFT:
                 currentHorizontalAngle = currentHorizontalAngle - angle;
                 if (currentHorizontalAngle < 0) {
                     currentHorizontalAngle = 360 + currentHorizontalAngle;
                 }
-                return "Precise Robotic Arm #" + deviceInfo.getId() +
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() +
                         ": current horizontal angle: " + currentHorizontalAngle;
+                break;
             default:
                 InvalidOperationException e = new InvalidOperationException();
                 e.setWhatOp(armMovementType.getValue());
                 e.setWhy("Invalid operation.");
                 throw e;
         }
+
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String grab() throws TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": grab()");
-        return "Precise Robotic Arm #" + deviceInfo.getId() + ": grabbed.";
+        String returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + ": grabbed.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String release() throws TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": release()");
-        return "Precise Robotic Arm #" + deviceInfo.getId() + ": released.";
+        String returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + ": released.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String move(ArmMovementType armMovementType) throws InvalidOperationException, TException {
         System.out.println("Precise Robotic Arm #" + deviceInfo.getId() + ": move(" + armMovementType + ")");
+        String returnMessage;
         switch(armMovementType) {
             case RAISE:
-                return "Precise Robotic Arm #" + deviceInfo.getId() + ": raised.";
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + ": raised.";
+                break;
             case DROP:
-                return "Precise Robotic Arm #" + deviceInfo.getId() + ": dropped.";
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + ": dropped.";
+                break;
             case ROTATE_RIGHT:
-                return "Precise Robotic Arm #" + deviceInfo.getId() + ": rotated right.";
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + ": rotated right.";
+                break;
             case ROTATE_LEFT:
-                return "Precise Robotic Arm #" + deviceInfo.getId() + ": rotated left.";
+                returnMessage =  "Precise Robotic Arm #" + deviceInfo.getId() + ": rotated left.";
+                break;
             default:
                 InvalidOperationException e = new InvalidOperationException();
                 e.setWhatOp(armMovementType.getValue());
                 e.setWhy("Invalid operation.");
                 throw e;
         }
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     public DeviceStruct getDeviceInfo() {

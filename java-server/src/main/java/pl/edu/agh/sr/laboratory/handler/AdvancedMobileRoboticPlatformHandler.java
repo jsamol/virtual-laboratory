@@ -1,6 +1,8 @@
 package pl.edu.agh.sr.laboratory.handler;
 
 import org.apache.thrift.TException;
+import pl.edu.agh.sr.laboratory.ClientNotifier;
+import pl.edu.agh.sr.laboratory.Server;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.InvalidOperationException;
 import pl.edu.agh.sr.rpc.laboratory.Status;
@@ -15,12 +17,16 @@ import java.util.List;
 public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRoboticPlatform.Iface {
     private DeviceStruct deviceInfo;
 
+    private List<ClientNotifier> notifiers;
+
     private boolean isAvailable;
 
     public AdvancedMobileRoboticPlatformHandler(int id) {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Advanced Mobile Robotic Platform");
+
+        this.notifiers = new ArrayList<>();
 
         this.isAvailable = true;
     }
@@ -56,24 +62,46 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
     public String acquireControl() throws TException {
         System.out.println("Advanced Mobile Robotic Platform#" + deviceInfo.getId() + ": acquireControl()");
         isAvailable = false;
-        return "Advanced Mobile Robotic Platform #" + deviceInfo.getId() + " acquired.";
+        String returnMessage =  "Advanced Mobile Robotic Platform #" + deviceInfo.getId() + " acquired.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String releaseControl() throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": releaseControl()");
         isAvailable = true;
-        return "Advanced Mobile Robotic Platform #" + deviceInfo.getId() + " released.";
+        String returnMessage =  "Advanced Mobile Robotic Platform #" + deviceInfo.getId() + " released.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
-    public void startMonitoring() throws TException {
+    public void startMonitoring(String address, int port) throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": startMonitoring()");
+        notifiers.add(new ClientNotifier(address, port));
     }
 
     @Override
-    public void stopMonitoring() throws TException {
+    public void stopMonitoring(String address, int port) throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": stopMonitoring()");
+        for (ClientNotifier notifier : notifiers) {
+            if (notifier.getAddress().equals(address) && notifier.getPort() == port) {
+                notifiers.remove(notifier);
+            }
+        }
     }
 
     @Override
@@ -103,35 +131,71 @@ public class AdvancedMobileRoboticPlatformHandler implements AdvancedMobileRobot
                     throw e;
             }
         }
+
         return result;
     }
 
     @Override
     public String goForwards(int distance) throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": goForwards()");
-        return "Advanced Mobile Robotic Platform #" +
+        String returnMessage =  "Advanced Mobile Robotic Platform #" +
                 deviceInfo.getId() + " moved forwards for " + distance + " meters.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String goBackwards(int distance) throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": goBackwards()");
-        return "Advanced Mobile Robotic Platform #" +
+        String returnMessage =  "Advanced Mobile Robotic Platform #" +
                 deviceInfo.getId() + " moved backwards for " + distance + " meters.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String goRight(int angle) throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": goRight()");
-        return "Advanced Mobile Robotic Platform #" +
+        String returnMessage =  "Advanced Mobile Robotic Platform #" +
                 deviceInfo.getId() + " moved right for " + angle + " degrees.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String goLeft(int angle) throws TException {
         System.out.println("Advanced Mobile Robotic Platform #" + deviceInfo.getId() + ": goLeft()");
-        return "Advanced Mobile Robotic Platform #" +
+        String returnMessage =  "Advanced Mobile Robotic Platform #" +
                 deviceInfo.getId() + " moved left for " + angle + " degrees.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     public DeviceStruct getDeviceInfo() {

@@ -1,6 +1,8 @@
 package pl.edu.agh.sr.laboratory.handler;
 
 import org.apache.thrift.TException;
+import pl.edu.agh.sr.laboratory.ClientNotifier;
+import pl.edu.agh.sr.laboratory.Server;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.roboticplatform.MobileRoboticPlatform;
@@ -12,12 +14,16 @@ import java.util.List;
 public class MobileRoboticPlatformHandler implements MobileRoboticPlatform.Iface {
     private DeviceStruct deviceInfo;
 
+    private List<ClientNotifier> notifiers;
+
     private boolean isAvailable;
 
     public MobileRoboticPlatformHandler(int id) {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Mobile Robotic Platform");
+
+        this.notifiers = new ArrayList<>();
 
         this.isAvailable = true;
     }
@@ -52,48 +58,102 @@ public class MobileRoboticPlatformHandler implements MobileRoboticPlatform.Iface
     public String acquireControl() throws TException {
         System.out.println("Mobile Robotic Platform#" + deviceInfo.getId() + ": acquireControl()");
         isAvailable = false;
-        return "Mobile Robotic Platform #" + deviceInfo.getId() + " acquired.";
+        String returnMessage =  "Mobile Robotic Platform #" + deviceInfo.getId() + " acquired.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String releaseControl() throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": releaseControl()");
         isAvailable = true;
-        return "Mobile Robotic Platform #" + deviceInfo.getId() + " released.";
+        String returnMessage =  "Mobile Robotic Platform #" + deviceInfo.getId() + " released.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
-    public void startMonitoring() throws TException {
+    public void startMonitoring(String address, int port) throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": startMonitoring()");
+        notifiers.add(new ClientNotifier(address, port));
     }
 
     @Override
-    public void stopMonitoring() throws TException {
+    public void stopMonitoring(String address, int port) throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": stopMonitoring()");
+        for (ClientNotifier notifier : notifiers) {
+            if (notifier.getAddress().equals(address) && notifier.getPort() == port) {
+                notifiers.remove(notifier);
+            }
+        }
     }
 
     @Override
     public String goForwards(int distance) throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": goForwards()");
-        return "Mobile Robotic Platform #" + deviceInfo.getId() + " moved forwards for " + distance + " meters.";
+        String returnMessage =  "Mobile Robotic Platform #" + deviceInfo.getId() + " moved forwards for " + distance + " meters.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String goBackwards(int distance) throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": goBackwards()");
-        return "Mobile Robotic Platform #" + deviceInfo.getId() + " moved backwards for " + distance + " meters.";
+        String returnMessage =  "Mobile Robotic Platform #" + deviceInfo.getId() + " moved backwards for " + distance + " meters.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String goRight(int angle) throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": goRight()");
-        return "Mobile Robotic Platform #" + deviceInfo.getId() + " moved right for " + angle + " degrees.";
+        String returnMessage =  "Mobile Robotic Platform #" + deviceInfo.getId() + " moved right for " + angle + " degrees.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String goLeft(int angle) throws TException {
         System.out.println("Mobile Robotic Platform #" + deviceInfo.getId() + ": goLeft()");
-        return "Mobile Robotic Platform #" + deviceInfo.getId() + " moved left for " + angle + " degrees.";
+        String returnMessage =  "Mobile Robotic Platform #" + deviceInfo.getId() + " moved left for " + angle + " degrees.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     public DeviceStruct getDeviceInfo() {

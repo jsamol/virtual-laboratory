@@ -22,6 +22,22 @@ class Iface(object):
     def getNumbers(self):
         pass
 
+    def setClientParams(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
+        pass
+
+    def removeNotifier(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -82,6 +98,40 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "getNumbers failed: unknown result")
 
+    def setClientParams(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
+        self.send_setClientParams(address, port)
+
+    def send_setClientParams(self, address, port):
+        self._oprot.writeMessageBegin('setClientParams', TMessageType.ONEWAY, self._seqid)
+        args = setClientParams_args()
+        args.address = address
+        args.port = port
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def removeNotifier(self, address, port):
+        """
+        Parameters:
+         - address
+         - port
+        """
+        self.send_removeNotifier(address, port)
+
+    def send_removeNotifier(self, address, port):
+        self._oprot.writeMessageBegin('removeNotifier', TMessageType.ONEWAY, self._seqid)
+        args = removeNotifier_args()
+        args.address = address
+        args.port = port
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
@@ -89,6 +139,8 @@ class Processor(Iface, TProcessor):
         self._processMap = {}
         self._processMap["getDevices"] = Processor.process_getDevices
         self._processMap["getNumbers"] = Processor.process_getNumbers
+        self._processMap["setClientParams"] = Processor.process_setClientParams
+        self._processMap["removeNotifier"] = Processor.process_removeNotifier
 
     def process(self, iprot, oprot):
         (name, type, seqid) = iprot.readMessageBegin()
@@ -142,6 +194,28 @@ class Processor(Iface, TProcessor):
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
+
+    def process_setClientParams(self, seqid, iprot, oprot):
+        args = setClientParams_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        try:
+            self._handler.setClientParams(args.address, args.port)
+        except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            pass
+
+    def process_removeNotifier(self, seqid, iprot, oprot):
+        args = removeNotifier_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        try:
+            self._handler.removeNotifier(args.address, args.port)
+        except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            pass
 
 # HELPER FUNCTIONS AND STRUCTURES
 
@@ -348,6 +422,150 @@ class getNumbers_result(object):
                 oprot.writeString(kiter14.encode('utf-8') if sys.version_info[0] == 2 else kiter14)
                 oprot.writeI32(viter15)
             oprot.writeMapEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class setClientParams_args(object):
+    """
+    Attributes:
+     - address
+     - port
+    """
+
+    thrift_spec = (
+        None,  # 0
+        (1, TType.STRING, 'address', 'UTF8', None, ),  # 1
+        (2, TType.I32, 'port', None, None, ),  # 2
+    )
+
+    def __init__(self, address=None, port=None,):
+        self.address = address
+        self.port = port
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, (self.__class__, self.thrift_spec))
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.address = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I32:
+                    self.port = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
+            return
+        oprot.writeStructBegin('setClientParams_args')
+        if self.address is not None:
+            oprot.writeFieldBegin('address', TType.STRING, 1)
+            oprot.writeString(self.address.encode('utf-8') if sys.version_info[0] == 2 else self.address)
+            oprot.writeFieldEnd()
+        if self.port is not None:
+            oprot.writeFieldBegin('port', TType.I32, 2)
+            oprot.writeI32(self.port)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class removeNotifier_args(object):
+    """
+    Attributes:
+     - address
+     - port
+    """
+
+    thrift_spec = (
+        None,  # 0
+        (1, TType.STRING, 'address', 'UTF8', None, ),  # 1
+        (2, TType.I32, 'port', None, None, ),  # 2
+    )
+
+    def __init__(self, address=None, port=None,):
+        self.address = address
+        self.port = port
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, (self.__class__, self.thrift_spec))
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.address = iprot.readString().decode('utf-8') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.I32:
+                    self.port = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, (self.__class__, self.thrift_spec)))
+            return
+        oprot.writeStructBegin('removeNotifier_args')
+        if self.address is not None:
+            oprot.writeFieldBegin('address', TType.STRING, 1)
+            oprot.writeString(self.address.encode('utf-8') if sys.version_info[0] == 2 else self.address)
+            oprot.writeFieldEnd()
+        if self.port is not None:
+            oprot.writeFieldBegin('port', TType.I32, 2)
+            oprot.writeI32(self.port)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()

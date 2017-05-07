@@ -28,6 +28,8 @@ struct DeviceStruct {
 service Info {
     list<DeviceStruct> getDevices();
     map<string, i32> getNumbers ();
+    oneway void setClientParams(1:string address, 2:i32 port);
+    oneway void removeNotifier(1:string address, 2:i32 port);
 }
 
 service Device {
@@ -38,8 +40,8 @@ service Device {
     string acquireControl();
     string releaseControl();
 
-    void startMonitoring();
-    void stopMonitoring();
+    oneway void startMonitoring(1:string address, 2:i32 port);
+    oneway void stopMonitoring(1:string address, 2:i32 port);
 }
 
 service OpticalDevice extends Device {
@@ -50,4 +52,8 @@ service OpticalDevice extends Device {
     string lookDown(1:i32 angle);
     string rotateRight(1:i32 angle);
     string rotateLeft(1:i32 angle);
+}
+
+service Notifier {
+    oneway void notify(1:string message)
 }

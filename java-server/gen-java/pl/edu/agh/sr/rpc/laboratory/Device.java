@@ -20,9 +20,9 @@ public class Device {
 
     public java.lang.String releaseControl() throws org.apache.thrift.TException;
 
-    public void startMonitoring() throws org.apache.thrift.TException;
+    public void startMonitoring(java.lang.String address, int port) throws org.apache.thrift.TException;
 
-    public void stopMonitoring() throws org.apache.thrift.TException;
+    public void stopMonitoring(java.lang.String address, int port) throws org.apache.thrift.TException;
 
   }
 
@@ -36,9 +36,9 @@ public class Device {
 
     public void releaseControl(org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
 
-    public void startMonitoring(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void startMonitoring(java.lang.String address, int port, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
-    public void stopMonitoring(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
+    public void stopMonitoring(java.lang.String address, int port, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -150,42 +150,30 @@ public class Device {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "releaseControl failed: unknown result");
     }
 
-    public void startMonitoring() throws org.apache.thrift.TException
+    public void startMonitoring(java.lang.String address, int port) throws org.apache.thrift.TException
     {
-      send_startMonitoring();
-      recv_startMonitoring();
+      send_startMonitoring(address, port);
     }
 
-    public void send_startMonitoring() throws org.apache.thrift.TException
+    public void send_startMonitoring(java.lang.String address, int port) throws org.apache.thrift.TException
     {
       startMonitoring_args args = new startMonitoring_args();
-      sendBase("startMonitoring", args);
+      args.setAddress(address);
+      args.setPort(port);
+      sendBaseOneway("startMonitoring", args);
     }
 
-    public void recv_startMonitoring() throws org.apache.thrift.TException
+    public void stopMonitoring(java.lang.String address, int port) throws org.apache.thrift.TException
     {
-      startMonitoring_result result = new startMonitoring_result();
-      receiveBase(result, "startMonitoring");
-      return;
+      send_stopMonitoring(address, port);
     }
 
-    public void stopMonitoring() throws org.apache.thrift.TException
-    {
-      send_stopMonitoring();
-      recv_stopMonitoring();
-    }
-
-    public void send_stopMonitoring() throws org.apache.thrift.TException
+    public void send_stopMonitoring(java.lang.String address, int port) throws org.apache.thrift.TException
     {
       stopMonitoring_args args = new stopMonitoring_args();
-      sendBase("stopMonitoring", args);
-    }
-
-    public void recv_stopMonitoring() throws org.apache.thrift.TException
-    {
-      stopMonitoring_result result = new stopMonitoring_result();
-      receiveBase(result, "stopMonitoring");
-      return;
+      args.setAddress(address);
+      args.setPort(port);
+      sendBaseOneway("stopMonitoring", args);
     }
 
   }
@@ -322,21 +310,27 @@ public class Device {
       }
     }
 
-    public void startMonitoring(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void startMonitoring(java.lang.String address, int port, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      startMonitoring_call method_call = new startMonitoring_call(resultHandler, this, ___protocolFactory, ___transport);
+      startMonitoring_call method_call = new startMonitoring_call(address, port, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class startMonitoring_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public startMonitoring_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
+      private java.lang.String address;
+      private int port;
+      public startMonitoring_call(java.lang.String address, int port, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, true);
+        this.address = address;
+        this.port = port;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("startMonitoring", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("startMonitoring", org.apache.thrift.protocol.TMessageType.ONEWAY, 0));
         startMonitoring_args args = new startMonitoring_args();
+        args.setAddress(address);
+        args.setPort(port);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -351,21 +345,27 @@ public class Device {
       }
     }
 
-    public void stopMonitoring(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
+    public void stopMonitoring(java.lang.String address, int port, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      stopMonitoring_call method_call = new stopMonitoring_call(resultHandler, this, ___protocolFactory, ___transport);
+      stopMonitoring_call method_call = new stopMonitoring_call(address, port, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class stopMonitoring_call extends org.apache.thrift.async.TAsyncMethodCall<Void> {
-      public stopMonitoring_call(org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
-        super(client, protocolFactory, transport, resultHandler, false);
+      private java.lang.String address;
+      private int port;
+      public stopMonitoring_call(java.lang.String address, int port, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, true);
+        this.address = address;
+        this.port = port;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("stopMonitoring", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("stopMonitoring", org.apache.thrift.protocol.TMessageType.ONEWAY, 0));
         stopMonitoring_args args = new stopMonitoring_args();
+        args.setAddress(address);
+        args.setPort(port);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -492,13 +492,12 @@ public class Device {
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
-      public startMonitoring_result getResult(I iface, startMonitoring_args args) throws org.apache.thrift.TException {
-        startMonitoring_result result = new startMonitoring_result();
-        iface.startMonitoring();
-        return result;
+      public org.apache.thrift.TBase getResult(I iface, startMonitoring_args args) throws org.apache.thrift.TException {
+        iface.startMonitoring(args.address, args.port);
+        return null;
       }
     }
 
@@ -512,13 +511,12 @@ public class Device {
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
-      public stopMonitoring_result getResult(I iface, stopMonitoring_args args) throws org.apache.thrift.TException {
-        stopMonitoring_result result = new stopMonitoring_result();
-        iface.stopMonitoring();
-        return result;
+      public org.apache.thrift.TBase getResult(I iface, stopMonitoring_args args) throws org.apache.thrift.TException {
+        iface.stopMonitoring(args.address, args.port);
+        return null;
       }
     }
 
@@ -801,50 +799,24 @@ public class Device {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            startMonitoring_result result = new startMonitoring_result();
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
           }
           public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            startMonitoring_result result = new startMonitoring_result();
             if (e instanceof org.apache.thrift.transport.TTransportException) {
               _LOGGER.error("TTransportException inside handler", e);
               fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
             } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
+              _LOGGER.error("Exception inside oneway handler", e);
             }
           }
         };
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
       public void start(I iface, startMonitoring_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.startMonitoring(resultHandler);
+        iface.startMonitoring(args.address, args.port,resultHandler);
       }
     }
 
@@ -861,50 +833,24 @@ public class Device {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
         return new org.apache.thrift.async.AsyncMethodCallback<Void>() { 
           public void onComplete(Void o) {
-            stopMonitoring_result result = new stopMonitoring_result();
-            try {
-              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
-            } catch (org.apache.thrift.transport.TTransportException e) {
-              _LOGGER.error("TTransportException writing to internal frame buffer", e);
-              fb.close();
-            } catch (java.lang.Exception e) {
-              _LOGGER.error("Exception writing to internal frame buffer", e);
-              onError(e);
-            }
           }
           public void onError(java.lang.Exception e) {
-            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
-            org.apache.thrift.TSerializable msg;
-            stopMonitoring_result result = new stopMonitoring_result();
             if (e instanceof org.apache.thrift.transport.TTransportException) {
               _LOGGER.error("TTransportException inside handler", e);
               fb.close();
-              return;
-            } else if (e instanceof org.apache.thrift.TApplicationException) {
-              _LOGGER.error("TApplicationException inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = (org.apache.thrift.TApplicationException)e;
             } else {
-              _LOGGER.error("Exception inside handler", e);
-              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
-              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
-            }
-            try {
-              fcall.sendResponse(fb,msg,msgType,seqid);
-            } catch (java.lang.Exception ex) {
-              _LOGGER.error("Exception writing to internal frame buffer", ex);
-              fb.close();
+              _LOGGER.error("Exception inside oneway handler", e);
             }
           }
         };
       }
 
       protected boolean isOneway() {
-        return false;
+        return true;
       }
 
       public void start(I iface, stopMonitoring_args args, org.apache.thrift.async.AsyncMethodCallback<Void> resultHandler) throws org.apache.thrift.TException {
-        iface.stopMonitoring(resultHandler);
+        iface.stopMonitoring(args.address, args.port,resultHandler);
       }
     }
 
@@ -3426,14 +3372,19 @@ public class Device {
   public static class startMonitoring_args implements org.apache.thrift.TBase<startMonitoring_args, startMonitoring_args._Fields>, java.io.Serializable, Cloneable, Comparable<startMonitoring_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("startMonitoring_args");
 
+    private static final org.apache.thrift.protocol.TField ADDRESS_FIELD_DESC = new org.apache.thrift.protocol.TField("address", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField PORT_FIELD_DESC = new org.apache.thrift.protocol.TField("port", org.apache.thrift.protocol.TType.I32, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new startMonitoring_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new startMonitoring_argsTupleSchemeFactory();
 
+    public java.lang.String address; // required
+    public int port; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      ADDRESS((short)1, "address"),
+      PORT((short)2, "port");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -3448,6 +3399,10 @@ public class Device {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // ADDRESS
+            return ADDRESS;
+          case 2: // PORT
+            return PORT;
           default:
             return null;
         }
@@ -3486,9 +3441,17 @@ public class Device {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __PORT_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.ADDRESS, new org.apache.thrift.meta_data.FieldMetaData("address", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.PORT, new org.apache.thrift.meta_data.FieldMetaData("port", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(startMonitoring_args.class, metaDataMap);
     }
@@ -3496,10 +3459,25 @@ public class Device {
     public startMonitoring_args() {
     }
 
+    public startMonitoring_args(
+      java.lang.String address,
+      int port)
+    {
+      this();
+      this.address = address;
+      this.port = port;
+      setPortIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public startMonitoring_args(startMonitoring_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      if (other.isSetAddress()) {
+        this.address = other.address;
+      }
+      this.port = other.port;
     }
 
     public startMonitoring_args deepCopy() {
@@ -3508,15 +3486,87 @@ public class Device {
 
     @Override
     public void clear() {
+      this.address = null;
+      setPortIsSet(false);
+      this.port = 0;
+    }
+
+    public java.lang.String getAddress() {
+      return this.address;
+    }
+
+    public startMonitoring_args setAddress(java.lang.String address) {
+      this.address = address;
+      return this;
+    }
+
+    public void unsetAddress() {
+      this.address = null;
+    }
+
+    /** Returns true if field address is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddress() {
+      return this.address != null;
+    }
+
+    public void setAddressIsSet(boolean value) {
+      if (!value) {
+        this.address = null;
+      }
+    }
+
+    public int getPort() {
+      return this.port;
+    }
+
+    public startMonitoring_args setPort(int port) {
+      this.port = port;
+      setPortIsSet(true);
+      return this;
+    }
+
+    public void unsetPort() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PORT_ISSET_ID);
+    }
+
+    /** Returns true if field port is set (has been assigned a value) and false otherwise */
+    public boolean isSetPort() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PORT_ISSET_ID);
+    }
+
+    public void setPortIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PORT_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case ADDRESS:
+        if (value == null) {
+          unsetAddress();
+        } else {
+          setAddress((java.lang.String)value);
+        }
+        break;
+
+      case PORT:
+        if (value == null) {
+          unsetPort();
+        } else {
+          setPort((java.lang.Integer)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case ADDRESS:
+        return getAddress();
+
+      case PORT:
+        return getPort();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3528,6 +3578,10 @@ public class Device {
       }
 
       switch (field) {
+      case ADDRESS:
+        return isSetAddress();
+      case PORT:
+        return isSetPort();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -3547,12 +3601,36 @@ public class Device {
       if (this == that)
         return true;
 
+      boolean this_present_address = true && this.isSetAddress();
+      boolean that_present_address = true && that.isSetAddress();
+      if (this_present_address || that_present_address) {
+        if (!(this_present_address && that_present_address))
+          return false;
+        if (!this.address.equals(that.address))
+          return false;
+      }
+
+      boolean this_present_port = true;
+      boolean that_present_port = true;
+      if (this_present_port || that_present_port) {
+        if (!(this_present_port && that_present_port))
+          return false;
+        if (this.port != that.port)
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetAddress()) ? 131071 : 524287);
+      if (isSetAddress())
+        hashCode = hashCode * 8191 + address.hashCode();
+
+      hashCode = hashCode * 8191 + port;
 
       return hashCode;
     }
@@ -3565,6 +3643,26 @@ public class Device {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetAddress()).compareTo(other.isSetAddress());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetAddress()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.address, other.address);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetPort()).compareTo(other.isSetPort());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetPort()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.port, other.port);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -3585,6 +3683,17 @@ public class Device {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("startMonitoring_args(");
       boolean first = true;
 
+      sb.append("address:");
+      if (this.address == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.address);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("port:");
+      sb.append(this.port);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -3604,6 +3713,8 @@ public class Device {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -3628,6 +3739,22 @@ public class Device {
             break;
           }
           switch (schemeField.id) {
+            case 1: // ADDRESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.address = iprot.readString();
+                struct.setAddressIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // PORT
+              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+                struct.port = iprot.readI32();
+                struct.setPortIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -3643,6 +3770,14 @@ public class Device {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.address != null) {
+          oprot.writeFieldBegin(ADDRESS_FIELD_DESC);
+          oprot.writeString(struct.address);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(PORT_FIELD_DESC);
+        oprot.writeI32(struct.port);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -3660,261 +3795,34 @@ public class Device {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, startMonitoring_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetAddress()) {
+          optionals.set(0);
+        }
+        if (struct.isSetPort()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetAddress()) {
+          oprot.writeString(struct.address);
+        }
+        if (struct.isSetPort()) {
+          oprot.writeI32(struct.port);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, startMonitoring_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class startMonitoring_result implements org.apache.thrift.TBase<startMonitoring_result, startMonitoring_result._Fields>, java.io.Serializable, Cloneable, Comparable<startMonitoring_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("startMonitoring_result");
-
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new startMonitoring_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new startMonitoring_resultTupleSchemeFactory();
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.address = iprot.readString();
+          struct.setAddressIsSet(true);
         }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
+        if (incoming.get(1)) {
+          struct.port = iprot.readI32();
+          struct.setPortIsSet(true);
         }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(startMonitoring_result.class, metaDataMap);
-    }
-
-    public startMonitoring_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public startMonitoring_result(startMonitoring_result other) {
-    }
-
-    public startMonitoring_result deepCopy() {
-      return new startMonitoring_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof startMonitoring_result)
-        return this.equals((startMonitoring_result)that);
-      return false;
-    }
-
-    public boolean equals(startMonitoring_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(startMonitoring_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("startMonitoring_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class startMonitoring_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public startMonitoring_resultStandardScheme getScheme() {
-        return new startMonitoring_resultStandardScheme();
-      }
-    }
-
-    private static class startMonitoring_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<startMonitoring_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, startMonitoring_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, startMonitoring_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class startMonitoring_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public startMonitoring_resultTupleScheme getScheme() {
-        return new startMonitoring_resultTupleScheme();
-      }
-    }
-
-    private static class startMonitoring_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<startMonitoring_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, startMonitoring_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, startMonitoring_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       }
     }
 
@@ -3926,14 +3834,19 @@ public class Device {
   public static class stopMonitoring_args implements org.apache.thrift.TBase<stopMonitoring_args, stopMonitoring_args._Fields>, java.io.Serializable, Cloneable, Comparable<stopMonitoring_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("stopMonitoring_args");
 
+    private static final org.apache.thrift.protocol.TField ADDRESS_FIELD_DESC = new org.apache.thrift.protocol.TField("address", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField PORT_FIELD_DESC = new org.apache.thrift.protocol.TField("port", org.apache.thrift.protocol.TType.I32, (short)2);
 
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new stopMonitoring_argsStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new stopMonitoring_argsTupleSchemeFactory();
 
+    public java.lang.String address; // required
+    public int port; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
+      ADDRESS((short)1, "address"),
+      PORT((short)2, "port");
 
       private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
 
@@ -3948,6 +3861,10 @@ public class Device {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
+          case 1: // ADDRESS
+            return ADDRESS;
+          case 2: // PORT
+            return PORT;
           default:
             return null;
         }
@@ -3986,9 +3903,17 @@ public class Device {
         return _fieldName;
       }
     }
+
+    // isset id assignments
+    private static final int __PORT_ISSET_ID = 0;
+    private byte __isset_bitfield = 0;
     public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.ADDRESS, new org.apache.thrift.meta_data.FieldMetaData("address", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.PORT, new org.apache.thrift.meta_data.FieldMetaData("port", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(stopMonitoring_args.class, metaDataMap);
     }
@@ -3996,10 +3921,25 @@ public class Device {
     public stopMonitoring_args() {
     }
 
+    public stopMonitoring_args(
+      java.lang.String address,
+      int port)
+    {
+      this();
+      this.address = address;
+      this.port = port;
+      setPortIsSet(true);
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public stopMonitoring_args(stopMonitoring_args other) {
+      __isset_bitfield = other.__isset_bitfield;
+      if (other.isSetAddress()) {
+        this.address = other.address;
+      }
+      this.port = other.port;
     }
 
     public stopMonitoring_args deepCopy() {
@@ -4008,15 +3948,87 @@ public class Device {
 
     @Override
     public void clear() {
+      this.address = null;
+      setPortIsSet(false);
+      this.port = 0;
+    }
+
+    public java.lang.String getAddress() {
+      return this.address;
+    }
+
+    public stopMonitoring_args setAddress(java.lang.String address) {
+      this.address = address;
+      return this;
+    }
+
+    public void unsetAddress() {
+      this.address = null;
+    }
+
+    /** Returns true if field address is set (has been assigned a value) and false otherwise */
+    public boolean isSetAddress() {
+      return this.address != null;
+    }
+
+    public void setAddressIsSet(boolean value) {
+      if (!value) {
+        this.address = null;
+      }
+    }
+
+    public int getPort() {
+      return this.port;
+    }
+
+    public stopMonitoring_args setPort(int port) {
+      this.port = port;
+      setPortIsSet(true);
+      return this;
+    }
+
+    public void unsetPort() {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.clearBit(__isset_bitfield, __PORT_ISSET_ID);
+    }
+
+    /** Returns true if field port is set (has been assigned a value) and false otherwise */
+    public boolean isSetPort() {
+      return org.apache.thrift.EncodingUtils.testBit(__isset_bitfield, __PORT_ISSET_ID);
+    }
+
+    public void setPortIsSet(boolean value) {
+      __isset_bitfield = org.apache.thrift.EncodingUtils.setBit(__isset_bitfield, __PORT_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, java.lang.Object value) {
       switch (field) {
+      case ADDRESS:
+        if (value == null) {
+          unsetAddress();
+        } else {
+          setAddress((java.lang.String)value);
+        }
+        break;
+
+      case PORT:
+        if (value == null) {
+          unsetPort();
+        } else {
+          setPort((java.lang.Integer)value);
+        }
+        break;
+
       }
     }
 
     public java.lang.Object getFieldValue(_Fields field) {
       switch (field) {
+      case ADDRESS:
+        return getAddress();
+
+      case PORT:
+        return getPort();
+
       }
       throw new java.lang.IllegalStateException();
     }
@@ -4028,6 +4040,10 @@ public class Device {
       }
 
       switch (field) {
+      case ADDRESS:
+        return isSetAddress();
+      case PORT:
+        return isSetPort();
       }
       throw new java.lang.IllegalStateException();
     }
@@ -4047,12 +4063,36 @@ public class Device {
       if (this == that)
         return true;
 
+      boolean this_present_address = true && this.isSetAddress();
+      boolean that_present_address = true && that.isSetAddress();
+      if (this_present_address || that_present_address) {
+        if (!(this_present_address && that_present_address))
+          return false;
+        if (!this.address.equals(that.address))
+          return false;
+      }
+
+      boolean this_present_port = true;
+      boolean that_present_port = true;
+      if (this_present_port || that_present_port) {
+        if (!(this_present_port && that_present_port))
+          return false;
+        if (this.port != that.port)
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
       int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetAddress()) ? 131071 : 524287);
+      if (isSetAddress())
+        hashCode = hashCode * 8191 + address.hashCode();
+
+      hashCode = hashCode * 8191 + port;
 
       return hashCode;
     }
@@ -4065,6 +4105,26 @@ public class Device {
 
       int lastComparison = 0;
 
+      lastComparison = java.lang.Boolean.valueOf(isSetAddress()).compareTo(other.isSetAddress());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetAddress()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.address, other.address);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.valueOf(isSetPort()).compareTo(other.isSetPort());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetPort()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.port, other.port);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
       return 0;
     }
 
@@ -4085,6 +4145,17 @@ public class Device {
       java.lang.StringBuilder sb = new java.lang.StringBuilder("stopMonitoring_args(");
       boolean first = true;
 
+      sb.append("address:");
+      if (this.address == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.address);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("port:");
+      sb.append(this.port);
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -4104,6 +4175,8 @@ public class Device {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
       try {
+        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
+        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -4128,6 +4201,22 @@ public class Device {
             break;
           }
           switch (schemeField.id) {
+            case 1: // ADDRESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.address = iprot.readString();
+                struct.setAddressIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // PORT
+              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
+                struct.port = iprot.readI32();
+                struct.setPortIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
             default:
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
           }
@@ -4143,6 +4232,14 @@ public class Device {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.address != null) {
+          oprot.writeFieldBegin(ADDRESS_FIELD_DESC);
+          oprot.writeString(struct.address);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldBegin(PORT_FIELD_DESC);
+        oprot.writeI32(struct.port);
+        oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -4160,261 +4257,34 @@ public class Device {
       @Override
       public void write(org.apache.thrift.protocol.TProtocol prot, stopMonitoring_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetAddress()) {
+          optionals.set(0);
+        }
+        if (struct.isSetPort()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetAddress()) {
+          oprot.writeString(struct.address);
+        }
+        if (struct.isSetPort()) {
+          oprot.writeI32(struct.port);
+        }
       }
 
       @Override
       public void read(org.apache.thrift.protocol.TProtocol prot, stopMonitoring_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      }
-    }
-
-    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
-      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
-    }
-  }
-
-  public static class stopMonitoring_result implements org.apache.thrift.TBase<stopMonitoring_result, stopMonitoring_result._Fields>, java.io.Serializable, Cloneable, Comparable<stopMonitoring_result>   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("stopMonitoring_result");
-
-
-    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new stopMonitoring_resultStandardSchemeFactory();
-    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new stopMonitoring_resultTupleSchemeFactory();
-
-
-    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
-    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-;
-
-      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
-
-      static {
-        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
-          byName.put(field.getFieldName(), field);
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.address = iprot.readString();
+          struct.setAddressIsSet(true);
         }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, or null if its not found.
-       */
-      public static _Fields findByThriftId(int fieldId) {
-        switch(fieldId) {
-          default:
-            return null;
+        if (incoming.get(1)) {
+          struct.port = iprot.readI32();
+          struct.setPortIsSet(true);
         }
-      }
-
-      /**
-       * Find the _Fields constant that matches fieldId, throwing an exception
-       * if it is not found.
-       */
-      public static _Fields findByThriftIdOrThrow(int fieldId) {
-        _Fields fields = findByThriftId(fieldId);
-        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
-        return fields;
-      }
-
-      /**
-       * Find the _Fields constant that matches name, or null if its not found.
-       */
-      public static _Fields findByName(java.lang.String name) {
-        return byName.get(name);
-      }
-
-      private final short _thriftId;
-      private final java.lang.String _fieldName;
-
-      _Fields(short thriftId, java.lang.String fieldName) {
-        _thriftId = thriftId;
-        _fieldName = fieldName;
-      }
-
-      public short getThriftFieldId() {
-        return _thriftId;
-      }
-
-      public java.lang.String getFieldName() {
-        return _fieldName;
-      }
-    }
-    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
-    static {
-      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(stopMonitoring_result.class, metaDataMap);
-    }
-
-    public stopMonitoring_result() {
-    }
-
-    /**
-     * Performs a deep copy on <i>other</i>.
-     */
-    public stopMonitoring_result(stopMonitoring_result other) {
-    }
-
-    public stopMonitoring_result deepCopy() {
-      return new stopMonitoring_result(this);
-    }
-
-    @Override
-    public void clear() {
-    }
-
-    public void setFieldValue(_Fields field, java.lang.Object value) {
-      switch (field) {
-      }
-    }
-
-    public java.lang.Object getFieldValue(_Fields field) {
-      switch (field) {
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
-    public boolean isSet(_Fields field) {
-      if (field == null) {
-        throw new java.lang.IllegalArgumentException();
-      }
-
-      switch (field) {
-      }
-      throw new java.lang.IllegalStateException();
-    }
-
-    @Override
-    public boolean equals(java.lang.Object that) {
-      if (that == null)
-        return false;
-      if (that instanceof stopMonitoring_result)
-        return this.equals((stopMonitoring_result)that);
-      return false;
-    }
-
-    public boolean equals(stopMonitoring_result that) {
-      if (that == null)
-        return false;
-      if (this == that)
-        return true;
-
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hashCode = 1;
-
-      return hashCode;
-    }
-
-    @Override
-    public int compareTo(stopMonitoring_result other) {
-      if (!getClass().equals(other.getClass())) {
-        return getClass().getName().compareTo(other.getClass().getName());
-      }
-
-      int lastComparison = 0;
-
-      return 0;
-    }
-
-    public _Fields fieldForId(int fieldId) {
-      return _Fields.findByThriftId(fieldId);
-    }
-
-    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
-      scheme(iprot).read(iprot, this);
-    }
-
-    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
-      scheme(oprot).write(oprot, this);
-      }
-
-    @Override
-    public java.lang.String toString() {
-      java.lang.StringBuilder sb = new java.lang.StringBuilder("stopMonitoring_result(");
-      boolean first = true;
-
-      sb.append(")");
-      return sb.toString();
-    }
-
-    public void validate() throws org.apache.thrift.TException {
-      // check for required fields
-      // check for sub-struct validity
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
-      try {
-        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
-      try {
-        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
-      } catch (org.apache.thrift.TException te) {
-        throw new java.io.IOException(te);
-      }
-    }
-
-    private static class stopMonitoring_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public stopMonitoring_resultStandardScheme getScheme() {
-        return new stopMonitoring_resultStandardScheme();
-      }
-    }
-
-    private static class stopMonitoring_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<stopMonitoring_result> {
-
-      public void read(org.apache.thrift.protocol.TProtocol iprot, stopMonitoring_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TField schemeField;
-        iprot.readStructBegin();
-        while (true)
-        {
-          schemeField = iprot.readFieldBegin();
-          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
-            break;
-          }
-          switch (schemeField.id) {
-            default:
-              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
-          }
-          iprot.readFieldEnd();
-        }
-        iprot.readStructEnd();
-
-        // check for required fields of primitive type, which can't be checked in the validate method
-        struct.validate();
-      }
-
-      public void write(org.apache.thrift.protocol.TProtocol oprot, stopMonitoring_result struct) throws org.apache.thrift.TException {
-        struct.validate();
-
-        oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldStop();
-        oprot.writeStructEnd();
-      }
-
-    }
-
-    private static class stopMonitoring_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
-      public stopMonitoring_resultTupleScheme getScheme() {
-        return new stopMonitoring_resultTupleScheme();
-      }
-    }
-
-    private static class stopMonitoring_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<stopMonitoring_result> {
-
-      @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, stopMonitoring_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
-      }
-
-      @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, stopMonitoring_result struct) throws org.apache.thrift.TException {
-        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
       }
     }
 

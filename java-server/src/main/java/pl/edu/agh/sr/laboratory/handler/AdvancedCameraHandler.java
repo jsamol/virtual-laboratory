@@ -1,6 +1,8 @@
 package pl.edu.agh.sr.laboratory.handler;
 
 import org.apache.thrift.TException;
+import pl.edu.agh.sr.laboratory.ClientNotifier;
+import pl.edu.agh.sr.laboratory.Server;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.camera.AdvancedCamera;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public class AdvancedCameraHandler implements AdvancedCamera.Iface {
     private DeviceStruct deviceInfo;
+
+    private List<ClientNotifier> notifiers;
 
     private boolean isAvailable;
 
@@ -28,6 +32,8 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Advanced Camera");
+
+        this.notifiers = new ArrayList<>();
 
         this.isAvailable = true;
 
@@ -80,24 +86,49 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
     public String acquireControl() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": acquireControl()");
         isAvailable = false;
-        return "Advanced Camera #" + deviceInfo.getId() + " acquired.";
+
+        String returnMessage = "Advanced Camera #" + deviceInfo.getId() + " acquired.";
+        
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String releaseControl() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": releaseControl()");
         isAvailable = true;
-        return "Advanced Camera #" + deviceInfo.getId() + " released.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " released.";
+
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
-    public void startMonitoring() throws TException {
+    public void startMonitoring(String address, int port) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": startMonitoring()");
+        notifiers.add(new ClientNotifier(address, port));
     }
 
     @Override
-    public void stopMonitoring() throws TException {
+    public void stopMonitoring(String address, int port) throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": stopMonitoring()");
+        for (ClientNotifier notifier : notifiers) {
+            if (notifier.getAddress().equals(address) && notifier.getPort() == port) {
+                notifiers.remove(notifier);
+            }
+        }
     }
 
     @Override
@@ -107,7 +138,16 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         if (currentZoom > maxZoom) {
             currentZoom = maxZoom;
         }
-        return "Advanced Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -117,7 +157,16 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         if (currentZoom < minZoom) {
             currentZoom = minZoom;
         }
-        return "Advanced Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -129,7 +178,16 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new vertical angle: " + currentVerticalAngle);
-        return "Advanced Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        String returnMessage =  "Advanced Camera #"
+                + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -141,7 +199,16 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new vertical angle: " + currentVerticalAngle);
-        return "Advanced Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        String returnMessage =  "Advanced Camera #"
+                + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -153,7 +220,16 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new horizontal angle: " + currentHorizontalAngle);
-        return "Advanced Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        String returnMessage =  "Advanced Camera #"
+                + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -165,43 +241,100 @@ public class AdvancedCameraHandler implements AdvancedCamera.Iface {
         }
         System.out.println("> Advanced Camera #" + deviceInfo.getId() +
                 ": new horizontal angle: " + currentHorizontalAngle);
-        return "Advanced Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        String returnMessage =  "Advanced Camera #"
+                + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String turnOnNightVision() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": turnOnNightVision()");
-        return "Advanced Camera #" + deviceInfo.getId() + " is in a night vision mode now.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " is in a night vision mode now.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String turnOffNightVision() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": turnOffNightVision()");
-        return "Advanced Camera #" + deviceInfo.getId() + " is in a normal vision mode now.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " is in a normal vision mode now.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String turnOnThermographyMode() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": turnOnThermographyMode()");
-        return "Advanced Camera #" + deviceInfo.getId() + " is in a thermography mode now.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " is in a thermography mode now.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String turnOffThermographyMode() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": turnOffThermographyMode()");
-        return "Advanced Camera #" + deviceInfo.getId() + " is in a normal vision mode now.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " is in a normal vision mode now.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String startRecording() throws TException {
         System.out.println("Advanced Camera #" + deviceInfo.getId() + ": startRecording()");
-        return "Advanced Camera #" + deviceInfo.getId() + " started recording.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " started recording.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String stopRecording() throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": stopRecording()");
-        return "Advanced Camera #" + deviceInfo.getId() + " stopped recording.";
+        String returnMessage =  "Advanced Camera #" + deviceInfo.getId() + " stopped recording.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     public DeviceStruct getDeviceInfo() {

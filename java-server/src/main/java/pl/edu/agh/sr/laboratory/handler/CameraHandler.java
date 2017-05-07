@@ -1,6 +1,8 @@
 package pl.edu.agh.sr.laboratory.handler;
 
 import org.apache.thrift.TException;
+import pl.edu.agh.sr.laboratory.ClientNotifier;
+import pl.edu.agh.sr.laboratory.Server;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Status;
 import pl.edu.agh.sr.rpc.laboratory.camera.Camera;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public class CameraHandler implements Camera.Iface {
     private DeviceStruct deviceInfo;
+
+    private List<ClientNotifier> notifiers;
 
     private boolean isAvailable;
 
@@ -31,6 +35,8 @@ public class CameraHandler implements Camera.Iface {
         deviceInfo = new DeviceStruct();
         this.deviceInfo.setId(id);
         this.deviceInfo.setType("Camera");
+
+        this.notifiers = new ArrayList<>();
 
         this.isAvailable = true;
 
@@ -82,24 +88,53 @@ public class CameraHandler implements Camera.Iface {
     public String acquireControl() throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": acquireControl()");
         isAvailable = false;
-        return "Camera #" + deviceInfo.getId() + " acquired.";
+        String returnMessage =  "Camera #" + deviceInfo.getId() + " acquired.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String releaseControl() throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": releaseControl()");
         isAvailable = true;
-        return "Camera #" + deviceInfo.getId() + " released.";
+        String returnMessage =  "Camera #" + deviceInfo.getId() + " released.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
-    public void startMonitoring() throws TException {
+    public void startMonitoring(String address, int port) throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": startMonitoring()");
+        synchronized (this) {
+            notifiers.add(new ClientNotifier(address, port));
+        }
     }
 
     @Override
-    public void stopMonitoring() throws TException {
+    public void stopMonitoring(String address, int port) throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": stopMonitoring()");
+        synchronized (this) {
+            ClientNotifier toRemove = null;
+            for (ClientNotifier notifier : notifiers) {
+                if (notifier.getAddress().equals(address) && notifier.getPort() == port) {
+                    toRemove = notifier;
+                    break;
+                }
+            }
+            notifiers.remove(toRemove);
+        }
     }
 
     @Override
@@ -109,7 +144,15 @@ public class CameraHandler implements Camera.Iface {
         if (currentZoom > maxZoom) {
             currentZoom = maxZoom;
         }
-        return "Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        String returnMessage =  "Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -119,7 +162,15 @@ public class CameraHandler implements Camera.Iface {
         if (currentZoom < minZoom) {
             currentZoom = minZoom;
         }
-        return "Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        String returnMessage =  "Camera #" + deviceInfo.getId() + ": current zoom value: " + currentZoom;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -130,7 +181,15 @@ public class CameraHandler implements Camera.Iface {
             currentVerticalAngle = maxVerticalAngle;
         }
         System.out.println("> Camera #" + deviceInfo.getId() + ": new vertical angle: " + currentVerticalAngle);
-        return "Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        String returnMessage =  "Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -141,7 +200,15 @@ public class CameraHandler implements Camera.Iface {
             currentVerticalAngle = minVerticalAngle;
         }
         System.out.println("> Camera #" + deviceInfo.getId() + ": new vertical angle: " + currentVerticalAngle);
-        return "Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        String returnMessage =  "Camera #" + deviceInfo.getId() + ": current vertical angle: " + currentVerticalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -152,7 +219,15 @@ public class CameraHandler implements Camera.Iface {
             currentHorizontalAngle = maxHorizontalAngle;
         }
         System.out.println("> Camera #" + deviceInfo.getId() + ": new horizontal angle: " + currentHorizontalAngle);
-        return "Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        String returnMessage =  "Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
@@ -163,19 +238,43 @@ public class CameraHandler implements Camera.Iface {
             currentHorizontalAngle = minHorizontalAngle;
         }
         System.out.println("> Camera #" + deviceInfo.getId() + ": new horizontal angle: " + currentHorizontalAngle);
-        return "Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        String returnMessage =  "Camera #" + deviceInfo.getId() + ": current horizontal angle: " + currentHorizontalAngle;
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String startRecording() throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": startRecording()");
-        return "Camera #" + deviceInfo.getId() + " started recording.";
+        String returnMessage =  "Camera #" + deviceInfo.getId() + " started recording.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     @Override
     public String stopRecording() throws TException {
         System.out.println("Camera #" + deviceInfo.getId() + ": stopRecording()");
-        return "Camera #" + deviceInfo.getId() + " stopped recording.";
+        String returnMessage =  "Camera #" + deviceInfo.getId() + " stopped recording.";
+        for (ClientNotifier notifier : Server.getNotifiers()) {
+            notifier.notify(returnMessage);
+        }
+        for (ClientNotifier notifier : notifiers) {
+            notifier.notify(returnMessage);
+        }
+
+        return returnMessage;
     }
 
     public DeviceStruct getDeviceInfo() {

@@ -16,7 +16,7 @@ else:
 from thrift.transport import TTransport, TSocket, TSSLSocket, THttpClient
 from thrift.protocol.TBinaryProtocol import TBinaryProtocol
 
-from laboratory import Info
+from laboratory import Notifier
 from laboratory.ttypes import *
 
 if len(sys.argv) <= 1 or sys.argv[1] == '--help':
@@ -24,10 +24,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('   getDevices()')
-    print('   getNumbers()')
-    print('  void setClientParams(string address, i32 port)')
-    print('  void removeNotifier(string address, i32 port)')
+    print('  void notify(string message)')
     print('')
     sys.exit(0)
 
@@ -104,32 +101,14 @@ else:
     else:
         transport = TTransport.TBufferedTransport(socket)
 protocol = TBinaryProtocol(transport)
-client = Info.Client(protocol)
+client = Notifier.Client(protocol)
 transport.open()
 
-if cmd == 'getDevices':
-    if len(args) != 0:
-        print('getDevices requires 0 args')
+if cmd == 'notify':
+    if len(args) != 1:
+        print('notify requires 1 args')
         sys.exit(1)
-    pp.pprint(client.getDevices())
-
-elif cmd == 'getNumbers':
-    if len(args) != 0:
-        print('getNumbers requires 0 args')
-        sys.exit(1)
-    pp.pprint(client.getNumbers())
-
-elif cmd == 'setClientParams':
-    if len(args) != 2:
-        print('setClientParams requires 2 args')
-        sys.exit(1)
-    pp.pprint(client.setClientParams(args[0], eval(args[1]),))
-
-elif cmd == 'removeNotifier':
-    if len(args) != 2:
-        print('removeNotifier requires 2 args')
-        sys.exit(1)
-    pp.pprint(client.removeNotifier(args[0], eval(args[1]),))
+    pp.pprint(client.notify(args[0],))
 
 else:
     print('Unrecognized method %s' % cmd)

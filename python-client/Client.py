@@ -1,5 +1,7 @@
 import signal
-import sys
+import os
+
+import Server
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -23,7 +25,12 @@ from laboratory.robotplatform.ttypes import OrderStruct
 
 port = 9090
 
+address = "localhost"
+return_port = 9091
+
 devices = {}
+
+info = None
 
 transport = None
 controlled_device = None
@@ -32,14 +39,15 @@ controlled_device = None
 def sigint_handler(signal, frame):
     if controlled_device is not None:
         controlled_device.releaseControl()
-    if transport is not None:
-        transport.close()
-        sys.exit(0)
+    on_exit()
 
 
 def main():
-    signal.signal(signal.SIGINT, sigint_handler)
     global transport
+    global info
+    global controlled_device
+
+    signal.signal(signal.SIGINT, sigint_handler)
     transport = TSocket.TSocket("localhost", port)
     transport = TTransport.TBufferedTransport(transport)
 
@@ -66,7 +74,8 @@ def main():
                 print("- " + device.type + " #" + str(device.id))
 
         elif command == "\\observe":
-            print("You are now in the observer mode ")
+            print("You are now in the observer mode.\nType '\\stop' to exit.")
+            observe()
 
         elif command.startswith("\\use"):
             device_name = command[5:]
@@ -77,18 +86,45 @@ def main():
                 status = device.getStatus()
                 if status == Status.AVAILABLE:
                     print(device.acquireControl())
-                    global controlled_device
                     controlled_device = device
                     use_device(device_name, device)
                 elif status == Status.NOT_AVAILABLE:
                     print("Sorry, device is used by someone else.")
                     answer = input("Do you want to start monitoring this device? (y/n) ")
                     if answer == "y":
-                        device.startMonitoring()
+                        monitor(device)
+        elif command.startswith("\\monitor"):
+            device_name = command[9:]
+            if device_name not in devices:
+                print("Invalid device name!")
+            else:
+                device = devices[device_name]
+                monitor(device)
 
         elif command == "\\exit":
-            transport.close()
-            sys.exit(0)
+            on_exit()
+
+
+def observe():
+    global info
+
+    info.setClientParams(address, return_port)
+    while True:
+        command = input("")
+        if command == "\\stop":
+            info.removeNotifier(address, return_port)
+            print("You are not in the observer mode anymore.")
+            return
+
+
+def monitor(device):
+    device.startMonitoring(address, return_port)
+    print("Type '\\stop' to exit.")
+    while True:
+        command = input("")
+        if command == "\\stop":
+            device.stopMonitoring(address, return_port)
+            return
 
 
 def use_device(name, device):
@@ -100,6 +136,8 @@ def use_device(name, device):
         _commands.append(command.split(" [", 1)[0])
 
     while True:
+        global controlled_device
+
         args = []
         command = input(name + "$ ")
         if command.find(" ") != -1:
@@ -352,7 +390,15 @@ def _initialize_clients(protocol, limit, name):
             devices[_name] = Telescope.Client(TMultiplexedProtocol.TMultiplexedProtocol(protocol, _name))
 
 
+def on_exit():
+    if transport is not None:
+        transport.close()
+        os._exit(0)
+
 if __name__ == "__main__":
+    server = Server.Server(return_port)
+    server.start()
+
     main()
 
 
