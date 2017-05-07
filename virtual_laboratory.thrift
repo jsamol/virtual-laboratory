@@ -43,11 +43,11 @@ service Device {
 }
 
 service OpticalDevice extends Device {
-    i32 zoomIn(1:i32 value);
-    i32 zoomOut(1:i32 value);
+    string zoomIn(1:i32 value);
+    string zoomOut(1:i32 value);
 
-    i32 lookUp(1:i32 angle);
-    i32 lookDown(1:i32 angle);
-    i32 rotateRight(1:i32 angle);
-    i32 rotateLeft(1:i32 angle);
+    string lookUp(1:i32 angle);
+    string lookDown(1:i32 angle);
+    string rotateRight(1:i32 angle);
+    string rotateLeft(1:i32 angle);
 }

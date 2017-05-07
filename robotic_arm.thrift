@@ -20,5 +20,5 @@ service RoboticArm extends virtual_laboratory.Device {
 }
 
 service PreciseRoboticArm extends RoboticArm {
-    i32 movePrecisely(1:ArmMovementType armMovementType, 2:i32 angle) throws (1:virtual_laboratory.InvalidOperationException e);
+    string movePrecisely(1:ArmMovementType armMovementType, 2:i32 angle) throws (1:virtual_laboratory.InvalidOperationException e);
 }

@@ -25,5 +25,5 @@ service MobileRoboticPlatform extends virtual_laboratory.Device {
 }
 
 service AdvancedMobileRoboticPlatform extends MobileRoboticPlatform {
-    string doSequenceOfMovements(1:list<OrderStruct> orders) throws (1:virtual_laboratory.InvalidOperationException e);
+    list<string> doSequenceOfMovements(1:list<OrderStruct> orders) throws (1:virtual_laboratory.InvalidOperationException e);
 }
