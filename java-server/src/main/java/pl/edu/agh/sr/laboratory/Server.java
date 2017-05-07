@@ -1,14 +1,11 @@
 package pl.edu.agh.sr.laboratory;
 
 import org.apache.thrift.TMultiplexedProcessor;
-import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TSimpleServer;
-import org.apache.thrift.transport.TServerSocket;
-import org.apache.thrift.transport.TServerTransport;
-import org.apache.thrift.transport.TTransportException;
+import org.apache.thrift.server.TThreadPoolServer;
+import org.apache.thrift.transport.*;
 import pl.edu.agh.sr.laboratory.handler.*;
 import pl.edu.agh.sr.rpc.laboratory.DeviceStruct;
 import pl.edu.agh.sr.rpc.laboratory.Info;
@@ -25,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.thrift.server.TServer.*;
 
 public class Server {
     private static final int port = 9090;
@@ -54,18 +50,14 @@ public class Server {
         multiplexedProcessor.registerProcessor("Info", new Info.Processor<>(InfoHandler.getInstance()));
 
         TServerTransport serverTransport = new TServerSocket(port);
-        TProtocolFactory protocolFactory = new TBinaryProtocol.Factory();
 
-        TServer server = new TSimpleServer(
-                new Args(serverTransport)
-                .protocolFactory(protocolFactory)
-                .processor(multiplexedProcessor)
+        TServer server = new TThreadPoolServer(
+                new TThreadPoolServer.Args(serverTransport)
+                        .processor(multiplexedProcessor)
         );
 
         System.out.println("Server running...");
         server.serve();
-
-        // TODO: monitoring, complete handlers
     }
 
     public static void main(String[] args) {
